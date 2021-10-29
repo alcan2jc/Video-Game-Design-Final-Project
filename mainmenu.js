@@ -5,14 +5,54 @@ function withinBounds(x1, y1, x2, y2, width1, height1, width2, height2) {
         y1 < y2 + height2);
 }
 
+class Cloud {
+    constructor(x, y) {
+        this.x = x; //xcoord
+        this.y = y; //ycoord
+    }
+
+    draw() {
+        fill(250)
+        noStroke();
+        ellipse(this.x, this.y, 70, 50); //left part
+        ellipse(this.x + 10, this.y + 10, 70, 50); //top part
+        ellipse(this.x - 20, this.y + 10, 70, 50); //right part
+    }
+}
+
+class Hill {
+    constructor(x, y) {
+        this.x = x; //xcoord
+        this.y = y; //ycoord
+    }
+
+    draw() {
+        fill(50,205,50);
+        rect(this.x, this.y, 1, 50);
+    }
+}
+
 class mainMenu {
     constructor() {
         this.titlesize = 40;
         this.namesize = 20;
         this.sin = 0;
+        this.clouds = [];
+        this.clouds.push(new Cloud(width / 10, height / 10));
+        this.clouds.push(new Cloud(width / 4, height / 4));
+        this.clouds.push(new Cloud(width / 1.2, height / 10));
+        this.hill = new Hill(width / 2, height  / 1.1);
     }
 
     drawMainMenu() {
+        //Clouds
+        for (let i = 0; i < this.clouds.length; i++) {
+            let cloud = this.clouds[i];
+            cloud.draw();
+        }
+
+        //Hills
+        this.hill.draw();
         //Title
         textAlign(CENTER, CENTER);
         push();
@@ -42,23 +82,24 @@ class mainMenu {
                 if (mouseIsPressed) {
                     if (i === 0)
                         game.state = "game";
-                    else if (i === 1) 
+                    else if (i === 1)
                         game.state = "tutorial";
                 }
             }
 
             textSize(15);
             fill(255);
-            
+
             text(buttonTitles[i], buttonX + 60, buttonY + 25);
 
             for (let i = 0; i < game.blocks.length; i++) {
                 game.blocks[i].draw();
             }
-            
-            game.player.update();
+
+            //Player
             game.player.draw();
-            game.player.x+=game.player.xspd;
+            game.player.x += game.player.xspd;
+
             if (game.player.x >= width + game.player.width) {
                 game.player.x = -game.player.width;
             }

@@ -39,6 +39,7 @@ class Game {
     update() {
         switch (game.state) {
             case "main menu": // main menu
+                game.player.y = height - game.player.height - game.blocks[0].height;
                 game.mainMenu.drawMainMenu();
                 break;
             case "tutorial": // tutorial

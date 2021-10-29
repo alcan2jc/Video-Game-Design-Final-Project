@@ -49,10 +49,14 @@ class Player {
         this.xvel = 0;
 
         // controlls
-        if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
-            this.xvel = -this.xspd;
-        }
-        else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
+        if (game.state === "game") {
+            if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
+                this.xvel = -this.xspd;
+            }
+            else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
+                this.xvel = this.xspd;
+            }
+        } else {
             this.xvel = this.xspd;
         }
         
