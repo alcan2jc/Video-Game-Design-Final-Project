@@ -3,6 +3,9 @@ class Sprites {
 
     constructor() {
         this.player_sprites();
+
+
+        this.dirt = loadImage('sprites/dirt.png');
     }
 
     player_sprites() {
