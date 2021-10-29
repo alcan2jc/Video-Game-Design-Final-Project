@@ -17,18 +17,64 @@ class Cloud {
         ellipse(this.x, this.y, 70, 50); //left part
         ellipse(this.x + 10, this.y + 10, 70, 50); //top part
         ellipse(this.x - 20, this.y + 10, 70, 50); //right part
+
+        //Reset cloud when it reaches the end. 
+        if (this.x > 400 + 70) {
+            this.x = -70;
+        }
+        this.x += 0.1;
     }
+
+
 }
 
 class Hill {
     constructor(x, y) {
         this.x = x; //xcoord
         this.y = y; //ycoord
+        this.ridges = [];
     }
 
     draw() {
-        fill(50,205,50);
-        rect(this.x, this.y, 1, 50);
+        fill(50, 205, 50);
+
+        // Create mountain variables
+        let ranges = 3;
+        let intervals = width / 10;
+        let rangeDiff = height / 10;
+        let ruggedness = 0.0125;
+        let a = random(1500);
+
+        // Create mountain ranges
+        for (let i = 0; i < ranges; ++i) {
+            let ridge = [];
+            for (let j = 0; j <= intervals; ++j) {
+                var n = noise(a);
+                ridge.push(map(n, 0, 1, 0, height - i * rangeDiff));
+                a += ruggedness;
+            }
+            this.ridges.push(ridge);
+        }
+
+        // Drawing mountains
+        let blueScale = 10;
+        let baseBlue = 50;
+        let greenScale = 35;
+        let baseGreen = 150;
+        for (let i = 0; i < ranges; ++i) {
+            for (let j = 0; j <= intervals; ++j) {
+                // Color of each level
+                fill(0, baseGreen - i * greenScale, baseBlue - i * blueScale);
+                noStroke();
+
+                // Drawing each quad that belongs to that mountain
+                let w = width / intervals;
+                quad(j * w, this.ridges[i][j] + i * rangeDiff,           // Top left
+                    (j + 1) * w, this.ridges[i][j + 1] + i * rangeDiff,  // Top right
+                    (j + 1) * w, height,                            // Bottom right
+                    j * w, height);                                // Bottom left
+            }
+        }
     }
 }
 
@@ -41,7 +87,7 @@ class mainMenu {
         this.clouds.push(new Cloud(width / 10, height / 10));
         this.clouds.push(new Cloud(width / 4, height / 4));
         this.clouds.push(new Cloud(width / 1.2, height / 10));
-        this.hill = new Hill(width / 2, height  / 1.1);
+        this.hill = new Hill(width / 2, height / 1.1);
     }
 
     drawMainMenu() {
@@ -98,10 +144,36 @@ class mainMenu {
 
             //Player
             game.player.draw();
-            game.player.x += game.player.xspd;
+            game.player.xvel = game.player.xspd;
+            //game.player.xvel = game.player.xspd;
 
             if (game.player.x >= width + game.player.width) {
                 game.player.x = -game.player.width;
+
+            }
+            //game.player.update();
+
+            //player jumps
+            if (game.player.x >= width / 1.12) {
+                if (game.player.yvel === 0) {
+                    game.player.yvel = game.player.jmp_spd;
+                    game.player.jumps--;
+                }
+            }
+            game.player.yvel += game.player.yacc;
+
+            let pos = game.player.playerCollision();
+            game.player.x = pos[0];
+            game.player.y = pos[1];
+
+            //Slime
+            game.slimes[0].draw();
+            if (game.player.x >= width / 2) {
+                game.slimes[0].jump_state = 2;
+            }
+
+            if (game.player.x <= width / 2) {
+                game.slimes[0].jump_state = 0;
             }
         }
     }

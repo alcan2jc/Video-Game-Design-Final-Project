@@ -1,6 +1,7 @@
 // global constants
 var TILE_SIZE = 32;
 var PLAYER_SIZE = 28;
+var SLIME_SIZE = 64;
 
 class Game {
     constructor() {
@@ -13,6 +14,7 @@ class Game {
 
     loadTilemap(tm) {
         this.blocks = [];
+        this.slimes = [];
         this.player = null;
 
         for (let y = 0; y < tm.length; y++) {
@@ -28,6 +30,10 @@ class Game {
                         this.player = new Player(x * TILE_SIZE, y * TILE_SIZE, PLAYER_SIZE, PLAYER_SIZE);
                         break;
                     }
+                    case 's': {
+                        print('slime added');
+                        this.slimes.push(new Slime(x * TILE_SIZE, y * TILE_SIZE, SLIME_SIZE, SLIME_SIZE));
+                    }
 
                     default: break;
                 }
@@ -39,7 +45,7 @@ class Game {
     update() {
         switch (game.state) {
             case "main menu": // main menu
-                game.player.y = height - game.player.height - game.blocks[0].height;
+                // game.player.y = height - game.player.height - game.blocks[0].height;
                 game.mainMenu.drawMainMenu();
                 break;
             case "tutorial": // tutorial
@@ -57,9 +63,18 @@ class Game {
         // update entities
         this.player.update();
 
+        for (let i = 0; i < this.slimes.length; i++) {
+            this.slimes[i].update();
+        }
+
         // draw entities
         for (let i = 0; i < this.blocks.length; i++) {
             this.blocks[i].draw();
+        }
+
+        // draw slimes
+        for (let i = 0; i < this.slimes.length; i++) {
+            this.slimes[i].draw();
         }
         
         this.player.draw();
@@ -67,23 +82,23 @@ class Game {
 }
 
 var intro_tilemap = [
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    " p                                      ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "                                        ",
-    "gggggggggggggggggggggggggggggggggggggggg"];
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                            s ",
+    "  p                           ",
+    "gggggggggggggggggggggggggggggggg"];

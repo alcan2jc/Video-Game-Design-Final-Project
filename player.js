@@ -23,50 +23,7 @@ class Player {
         this.anim_speed = 60 / 10; // frames per second
     }
 
-    getSprite() {
-        switch (this.animation_state) {
-            // idle
-            case 0: return sprites.player_idle;
-            // running
-            case 1: {
-                if (!(frameCount % this.anim_speed)) {
-                    this.anim_counter++;
-                    this.anim_counter %= 3;
-                }
-                return sprites.player_run[this.anim_counter];
-            }
-            case 2: return sprites.player_airborn;
-
-            default:
-                print('Invalide animation State')
-        }
-
-        return null;
-    }
-
-    update() {
-
-        this.xvel = 0;
-
-        // controlls
-        if (game.state === "game") {
-            if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
-                this.xvel = -this.xspd;
-            }
-            else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
-                this.xvel = this.xspd;
-            }
-        } else {
-            this.xvel = this.xspd;
-        }
-        
-        if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && this.jumps > 0 && this.yvel === 0) {      
-            this.yvel = this.jmp_spd;
-            this.jumps--;
-        } else {
-            this.yvel += this.yacc;
-        }
-        
+    playerCollision() {
         let newx = this.x + this.xvel;
 
         // wall collision
@@ -115,6 +72,49 @@ class Player {
                 }
             }
         }
+        return [newx, newy];
+    }
+    getSprite() {
+        switch (this.animation_state) {
+            // idle
+            case 0: return sprites.player_idle;
+            // running
+            case 1: {
+                if (!(frameCount % this.anim_speed)) {
+                    this.anim_counter++;
+                    this.anim_counter %= 3;
+                }
+                return sprites.player_run[this.anim_counter];
+            }
+            case 2: return sprites.player_airborn;
+
+            default:
+                print('Invalide animation State')
+        }
+
+        return null;
+    }
+
+    update() {
+
+        this.xvel = 0;
+
+        // controlls
+        if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
+            this.xvel = -this.xspd;
+        }
+        else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
+            this.xvel = this.xspd;
+        }
+
+        if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && this.jumps > 0 && this.yvel === 0) {
+            this.yvel = this.jmp_spd;
+            this.jumps--;
+        } else {
+            this.yvel += this.yacc;
+        }
+
+        let newpos = this.playerCollision();
 
         if (this.xvel == 0) {
             this.animation_state = 0;
@@ -123,9 +123,9 @@ class Player {
         } else {
             this.animation_state = 1;
         }
-    
-        this.x = newx;
-        this.y = newy;
+
+        this.x = newpos[0];
+        this.y = newpos[1];
 
     }
 
@@ -135,11 +135,11 @@ class Player {
         if (this.xvel < 0) {
             push();
             scale(-1, 1);
-            image(this.getSprite(), -this.x - this.width, this.y, this.width, this.height); 
+            image(this.getSprite(), -this.x - this.width, this.y, this.width, this.height);
             pop();
-          } else {
+        } else {
             image(this.getSprite(), this.x, this.y, this.width, this.height);
-          }
+        }
     }
 
 
