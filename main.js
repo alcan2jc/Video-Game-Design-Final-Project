@@ -1,6 +1,6 @@
 var game;
 function setup() {
-    createCanvas(800, 400);
+    createCanvas(960, 640);
     game = new Game();
 }
 
