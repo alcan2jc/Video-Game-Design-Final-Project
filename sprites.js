@@ -15,6 +15,12 @@ class Sprites {
         this.slime_squished = loadImage('sprites/slime_idle.png');
         this.slime_tall = loadImage('sprites/slime_tall.png');
 
+        // bat sprites
+        this.bat = [];
+        for (let i = 0; i < 12; i++) {
+            this.bat.push(loadImage('sprites/bat/bat' + str(i) + '.png'));
+        }
+
         // other
         this.dirt = loadImage('sprites/dirt.png');
         this.spike = loadImage('sprites/spike.png');

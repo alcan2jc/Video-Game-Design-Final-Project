@@ -107,7 +107,6 @@ class Slime {
     draw() {
 
         image(sprites.slime_idle, this.x, this.y, this.width, this.height);
-        print(this.x, this.y);
 
         /*
         if (this.xvel < 0) {

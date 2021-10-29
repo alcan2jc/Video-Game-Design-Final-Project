@@ -2,6 +2,7 @@
 var TILE_SIZE = 32;
 var PLAYER_SIZE = 28;
 var SLIME_SIZE = 64;
+var BAT_SIZE =128;
 
 class Game {
     constructor() {
@@ -15,6 +16,7 @@ class Game {
     loadTilemap(tm) {
         this.blocks = [];
         this.slimes = [];
+        this.bats = [];
         this.player = null;
 
         for (let y = 0; y < tm.length; y++) {
@@ -31,16 +33,17 @@ class Game {
                         break;
                     }
                     case 's': {
-                        print('slime added');
                         this.slimes.push(new Slime(x * TILE_SIZE, y * TILE_SIZE, SLIME_SIZE, SLIME_SIZE));
+                        break;
+                    }
+                    case 'b': {
+                        this.bats.push(new Bat(x * TILE_SIZE, y * TILE_SIZE, BAT_SIZE, BAT_SIZE));
                     }
 
                     default: break;
                 }
             }
         }
-
-        print(this.blocks.length);
     }
 
     update() {
@@ -76,6 +79,11 @@ class Game {
         for (let i = 0; i < this.slimes.length; i++) {
             this.slimes[i].draw();
         }
+
+        // draw bats
+        for (let i = 0; i < this.bats.length; i++) {
+            this.bats[i].draw();
+        }
         
         this.player.draw();
     }
@@ -91,7 +99,7 @@ var intro_tilemap = [
     "                              ",
     "                              ",
     "                              ",
-    "        s                     ",
+    "        s      b              ",
     "                              ",
     "                p             ",
     "                              ",
