@@ -51,14 +51,10 @@ class Player {
         // controlls
         if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
             this.xvel = -this.xspd;
-            this.animation_state = 1;
         }
         else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
             this.xvel = this.xspd;
-            this.animation_state = 1;
         }
-        else
-            this.animation_state = 0;
         
         if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && this.jumps > 0 && this.yvel === 0) {      
             this.yvel = this.jmp_spd;
@@ -116,8 +112,12 @@ class Player {
             }
         }
 
-        if (this.yvel != 0) {
-            this.animation_state = 2;   // airborn
+        if (this.xvel == 0) {
+            this.animation_state = 0;
+        } else if (this.yvel != 0) {
+            this.animation_state = 2;
+        } else {
+            this.animation_state = 1;
         }
     
         this.x = newx;
