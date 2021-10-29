@@ -16,6 +16,8 @@ class Sprites {
         for (let i = 0; i < 3; i++) {
             this.player_run.push(loadImage('sprites/player_run' + str(i) + '.png'));
         }
+
+        this.player_airborn = loadImage('sprites/player_airborn.png');
     }
 
 
