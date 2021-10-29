@@ -9,6 +9,8 @@ class mainMenu {
         textAlign(CENTER, CENTER);
         push();
         textSize(this.size);
+        stroke(255);
+        fill('yellow');
         text("The Rogue Swordsman", width / 2, height / 8);
         this.sin += 0.01;
         this.size = abs(sin(this.sin)) * 10 + 50;
