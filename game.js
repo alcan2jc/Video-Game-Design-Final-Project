@@ -34,7 +34,6 @@ class Game {
             }
         }
 
-        print(this.blocks.length);
     }
 
     update() {
@@ -78,7 +77,7 @@ var intro_tilemap = [
     "                                        ",
     "                                        ",
     "                                        ",
-    "                p                       ",
+    " p                                      ",
     "                                        ",
     "                                        ",
     "                                        ",

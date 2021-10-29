@@ -51,6 +51,17 @@ class mainMenu {
             fill(255);
             
             text(buttonTitles[i], buttonX + 60, buttonY + 25);
+
+            for (let i = 0; i < game.blocks.length; i++) {
+                game.blocks[i].draw();
+            }
+            
+            game.player.update();
+            game.player.draw();
+            game.player.x+=game.player.xspd;
+            if (game.player.x >= width + game.player.width) {
+                game.player.x = -game.player.width;
+            }
         }
     }
 }

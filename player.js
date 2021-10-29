@@ -45,15 +45,15 @@ class Player {
     }
 
     update() {
-          
+
         this.xvel = 0;
-        
+
         // controlls
         if (keyIsDown(LEFT_ARROW) || keyIsDown(65))
             this.xvel = -this.xspd;
         else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68))
             this.xvel = this.xspd;
-        
+
         /*
         if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && this.jumps > 0 && this.yvel === 0) {      
             this.yvel = this.jmp_spd;
@@ -62,45 +62,45 @@ class Player {
             this.yvel += this.yacc;
         }
         */
-       this.yvel += this.yacc;
-        
+        this.yvel += this.yacc;
+
         let newx = this.x + this.xvel;
-        
+
         // wall collision
         //x
         for (let i = 0; i < game.blocks.length; i++) {
             let block = game.blocks[i];
-            
+
             let d = abs(this.x - block.x) + abs(this.y - block.y);
-            
+
             if (d < 50) {
-        
+
                 if (
-                newx + this.width > block.x && 
-                newx < block.x + block.width && 
-                this.y + this.height > block.y && 
-                this.y < block.y + block.height) {
+                    newx + this.width > block.x &&
+                    newx < block.x + block.width &&
+                    this.y + this.height > block.y &&
+                    this.y < block.y + block.height) {
 
                     newx = this.x;
                     break;
                 }
             }
         }
-        
+
         // y
         let newy = this.y + this.yvel;
-        
+
         for (let i = 0; i < game.blocks.length; i++) {
             let block = game.blocks[i];
-            
+
             let d = abs(this.x - block.x) + abs(this.y - block.y);
-            
+
             if (d < 50) {
                 if (
-                newx + this.width > block.x && 
-                newx < block.x + block.width && 
-                newy + this.height > block.y && 
-                newy < block.y + block.height) {
+                    newx + this.width > block.x &&
+                    newx < block.x + block.width &&
+                    newy + this.height > block.y &&
+                    newy < block.y + block.height) {
 
                     if (this.yvel > 0) {
                         this.jumps = this.max_jumps;
@@ -112,7 +112,7 @@ class Player {
                 }
             }
         }
-    
+
         this.x = newx;
         this.y = newy;
 
