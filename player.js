@@ -35,7 +35,7 @@ class Player {
                 }
                 return sprites.player_run[this.anim_counter];
             }
-            case 2: return null;
+            case 2: return sprites.player_airborn;
 
             default:
                 print('Invalide animation State')
@@ -49,21 +49,24 @@ class Player {
         this.xvel = 0;
 
         // controlls
-        if (keyIsDown(LEFT_ARROW) || keyIsDown(65))
+        if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
             this.xvel = -this.xspd;
-        else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68))
+            this.animation_state = 1;
+        }
+        else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
             this.xvel = this.xspd;
-
-        /*
+            this.animation_state = 1;
+        }
+        else
+            this.animation_state = 0;
+        
         if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && this.jumps > 0 && this.yvel === 0) {      
             this.yvel = this.jmp_spd;
             this.jumps--;
         } else {
             this.yvel += this.yacc;
         }
-        */
-        this.yvel += this.yacc;
-
+        
         let newx = this.x + this.xvel;
 
         // wall collision
@@ -113,6 +116,10 @@ class Player {
             }
         }
 
+        if (this.yvel != 0) {
+            this.animation_state = 2;   // airborn
+        }
+    
         this.x = newx;
         this.y = newy;
 
@@ -120,7 +127,15 @@ class Player {
 
 
     draw() {
-        image(this.getSprite(), this.x, this.y, this.width, this.height);
+
+        if (this.xvel < 0) {
+            push();
+            scale(-1, 1);
+            image(this.getSprite(), -this.x - this.width, this.y, this.width, this.height); 
+            pop();
+          } else {
+            image(this.getSprite(), this.x, this.y, this.width, this.height);
+          }
     }
 
 
