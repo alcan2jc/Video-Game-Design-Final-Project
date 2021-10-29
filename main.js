@@ -1,11 +1,14 @@
-
-var mm;
+var game;
 function setup() {
     createCanvas(800, 400);
-    mm = new mainMenu();
+    game = new Game();
 }
 
 function draw() {
-    background(220);
-    mm.drawMainMenu();
+    background(0);
+    if (game.state === "main menu")
+        game.mainMenu.drawMainMenu();
+    // else if (game.state === "game") 
+    else if (game.state === "tutorial")
+        game.tutorial.drawTutorial();
 }
