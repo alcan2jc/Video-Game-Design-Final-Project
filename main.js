@@ -1,14 +1,14 @@
-
-var mm;
-var player;
-var sprites;
+var game;
 function setup() {
     createCanvas(800, 400);
-    sprites = new Sprites();
-    player = new Player(width/2, height/2, 30, 30);
+    game = new Game();
 }
 
 function draw() {
-    background(220);
-    player.draw();
+    background(0);
+    if (game.state === "main menu")
+        game.mainMenu.drawMainMenu();
+    // else if (game.state === "game") 
+    else if (game.state === "tutorial")
+        game.tutorial.drawTutorial();
 }
