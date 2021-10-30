@@ -105,7 +105,7 @@ class mainMenu {
         textSize(this.titlesize);
         stroke(0);
         fill('yellow');
-        text("The Rogue Swordsman", width / 2, height / 8);
+        text("The One Eyed Rogue", width / 2, height / 8);
         textSize(20);
         text("By Jonathan Borghese and John Alcantara", width / 2, height / 3.4);
         this.sin += 0.01;
@@ -174,6 +174,17 @@ class mainMenu {
 
             if (game.player.x <= width / 2) {
                 game.slimes[0].jump_state = 0;
+            }
+
+            //bat
+            for (let i = 0; i < game.bats.length; i++) {
+                let bat = game.bats[i];
+                bat.draw();
+                bat.x--;
+
+                if (bat.x < -bat.width) {
+                    bat.x = width + bat.width;
+                }
             }
         }
     }
