@@ -115,7 +115,7 @@ class Player {
         }
 
         let newpos = this.playerCollision();
-
+        print(newpos);
         if (this.xvel == 0) {
             this.animation_state = 0;
         } else if (this.yvel != 0) {

@@ -10,5 +10,4 @@ class Block {
     draw() {
       image(this.sprite, this.x, this.y, this.width, this.height);
     }
-    
   }

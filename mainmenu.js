@@ -41,7 +41,7 @@ class Hill {
         // Create mountain variables
         let ranges = 3;
         let intervals = width / 10;
-        let rangeDiff = height / 10;
+        let rangeDiff = height / 2;
         let ruggedness = 0.0125;
         let a = random(1500);
 
@@ -50,7 +50,7 @@ class Hill {
             let ridge = [];
             for (let j = 0; j <= intervals; ++j) {
                 var n = noise(a);
-                ridge.push(map(n, 0, 1, 0, height - i * rangeDiff));
+                ridge.push(map(n, 0, 1, height / 2, height - (i * rangeDiff - 200)));
                 a += ruggedness;
             }
             this.ridges.push(ridge);
@@ -91,14 +91,19 @@ class mainMenu {
     }
 
     drawMainMenu() {
+
+        //background
+        image(sprites.background, 0, 0, width, height);
+
         //Clouds
-        for (let i = 0; i < this.clouds.length; i++) {
-            let cloud = this.clouds[i];
-            cloud.draw();
-        }
+        // for (let i = 0; i < this.clouds.length; i++) {
+        //     let cloud = this.clouds[i];
+        //     cloud.draw();
+        // }
 
         //Hills
         this.hill.draw();
+
         //Title
         textAlign(CENTER, CENTER);
         push();
@@ -117,7 +122,7 @@ class mainMenu {
         let buttonTitles = ["PLAY", "HOW TO PLAY"];
         for (let i = 0; i < buttonTitles.length; i++) {
             let buttonX = width / 2.5;
-            let buttonY = (height / 2.5) + 75 * i;
+            let buttonY = (height / 2) + 75 * i;
             let boxWidth = 120;
             let boxHeight = 50;
             if (withinBounds(mouseX, mouseY, buttonX, buttonY, 1, 1, boxWidth, boxHeight)) {
@@ -126,15 +131,18 @@ class mainMenu {
 
                 //If selected
                 if (mouseIsPressed) {
-                    if (i === 0)
+                    if (i === 0) {
+                        game.loadTilemap(intro_tilemap);
                         game.state = "game";
+                    }
                     else if (i === 1)
                         game.state = "tutorial";
                 }
             }
 
             textSize(15);
-            fill(255);
+            textStyle(BOLD);
+            fill(0);
 
             text(buttonTitles[i], buttonX + 60, buttonY + 25);
 
@@ -145,16 +153,14 @@ class mainMenu {
             //Player
             game.player.draw();
             game.player.xvel = game.player.xspd;
-            //game.player.xvel = game.player.xspd;
 
             if (game.player.x >= width + game.player.width) {
-                game.player.x = -game.player.width;
-
+                game.player.x = -game.player.width / 2;
+                game.player.y = height - game.player.height - TILE_SIZE;
             }
-            //game.player.update();
 
             //player jumps
-            if (game.player.x >= width / 1.12) {
+            if (game.player.x >= width / 2.5 && game.player.x < width / 2) {
                 if (game.player.yvel === 0) {
                     game.player.yvel = game.player.jmp_spd;
                     game.player.jumps--;

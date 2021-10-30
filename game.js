@@ -3,6 +3,7 @@ var TILE_SIZE = 32;
 var PLAYER_SIZE = 28;
 var SLIME_SIZE = 64;
 var BAT_SIZE = 64;
+var SPIKE_SIZE = 32;
 
 class Game {
     constructor() {
@@ -38,6 +39,11 @@ class Game {
                     }
                     case 'b': {
                         this.bats.push(new Bat(x * TILE_SIZE, y * TILE_SIZE, BAT_SIZE, BAT_SIZE));
+                        break;
+                    }
+                    case 't': {
+                        this.blocks.push(new Block(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, sprites.spike));
+                        break;
                     }
 
                     default: break;
@@ -49,7 +55,6 @@ class Game {
     update() {
         switch (game.state) {
             case "main menu": // main menu
-                // game.player.y = height - game.player.height - game.blocks[0].height;
                 game.mainMenu.drawMainMenu();
                 break;
             case "tutorial": // tutorial
@@ -58,12 +63,38 @@ class Game {
             case "game": // game
                 this.game_state();
                 break;
-            
             default: break;
         }
     }
 
     game_state() {
+        //draw background
+        image(sprites.background, 0, 0, width, height);
+
+        //drawHills
+        game.mainMenu.hill.draw();
+
+        //bat
+        for (let i = 0; i < game.bats.length; i++) {
+            let bat = game.bats[i];
+            bat.draw();
+            bat.x--;
+
+            if (bat.x < -bat.width) {
+                bat.x = width + bat.width;
+            }
+        }
+
+        if (game.player.x >= width + game.player.width) {
+            game.player.x = -game.player.width / 2;
+            game.player.y = height - game.player.height - TILE_SIZE;
+        }
+
+        if (game.player.x <= -game.player.width) {
+            game.player.x = width - (game.player.width / 2);
+            game.player.y = height - game.player.height - TILE_SIZE;
+        }
+
         // update entities
         this.player.update();
 
@@ -85,7 +116,7 @@ class Game {
         for (let i = 0; i < this.bats.length; i++) {
             this.bats[i].draw();
         }
-        
+
         this.player.draw();
     }
 }
@@ -110,4 +141,4 @@ var intro_tilemap = [
     "                              ",
     "                            s ",
     "  p                           ",
-    "gggggggggggggggggggggggggggggggg"];
+    "gggggggggggggttttgggggggggggggggggggggggg"];

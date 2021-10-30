@@ -24,6 +24,7 @@ class Sprites {
         // other
         this.dirt = loadImage('sprites/dirt.png');
         this.spike = loadImage('sprites/spike.png');
+        this.background = loadImage('sprites/MountainBackground.png');
     }
 
 

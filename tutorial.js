@@ -5,15 +5,17 @@ class Page {
 
     drawPage() {
         if (this.page === 0) {
-            text("0", width / 2, height / 2);
+            text("Press right arrow key to move right", width / 2, height / 4);
+            text("Press left arrow key to move left", width / 2, height / 3.2);
+            text("Press up arrow key to jump", width / 2, height / 2.7);
         } else if (this.page === 1) {
-            text("1", width / 2, height / 2);
+            text("Coming Soon 1", width / 2, height / 2);
         } else if (this.page === 2) {
-            text("2", width / 2, height / 2);
+            text("Coming Soon 2", width / 2, height / 2);
         } else if (this.page === 3) {
-            text("3", width / 2, height / 2);
+            text("Coming Soon 3", width / 2, height / 2);
         } else if (this.page === 4) {
-            text("4", width / 2, height / 2);
+            text("Coming Soon 4", width / 2, height / 2);
         }
     }
 }
@@ -58,6 +60,8 @@ class Tutorial {
     }
 
     drawTutorial() {
+        image(sprites.background, 0, 0, width, height);
+
         textSize(30);
         fill("yellow");
         text("HOW TO PLAY", width / 2, height / 8);
