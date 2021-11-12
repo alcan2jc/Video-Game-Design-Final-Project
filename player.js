@@ -45,7 +45,9 @@ class Player {
         // 2: airborn
         // 3: slash
         this.animation_state = 1;
-        this.anim_counter = 0;
+
+        this.anim_counter_run = 0;
+        this.anim_counter_sword = 0;
         this.anim_speed = 60 / 10; // frames per second
         this.anim_speed_sword = 60 / 10; // frames per second
 
@@ -136,10 +138,10 @@ class Player {
             // running
             case 1: {
                 if (!(frameCount % this.anim_speed)) {
-                    this.anim_counter++;
-                    this.anim_counter %= 3;
+                    this.anim_counter_run++;
+                    this.anim_counter_run %= 3;
                 }
-                return sprites.player_run[this.anim_counter];
+                return sprites.player_run[this.anim_counter_run];
             }
             case 2: return sprites.player_airborn;
 
@@ -152,13 +154,13 @@ class Player {
 
     getSwordSprite() {
         if (!(frameCount % this.anim_speed_sword)) {
-            this.anim_counter++;
-            this.anim_counter %= 3;
-            print(this.anim_counter);
-            if (this.anim_counter === 0)
+            this.anim_counter_sword++;
+            this.anim_counter_sword %= 3;
+            //print(this.anim_counter);
+            if (this.anim_counter_sword === 0)
                 this.swinging = false;
         }
-        return sprites.sword[this.anim_counter];
+        return sprites.sword[this.anim_counter_sword];
     }
     jump() {
         this.vel.y = this.jmp_spd;
@@ -175,18 +177,15 @@ class Player {
     }
 
     update() {
-        //this.vel.x = 0;
         this.forces.x = 0;
         this.forces.y = 0;
 
         // controls
         if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
-            //this.vel.x = -this.xspd;
             this.forces.add(this.xacc_n);
             this.lastDir = 'left';
         }
         else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
-            //this.vel.x = this.xspd;
             this.forces.add(this.xacc);
             this.lastDir = 'right';
         } else {
@@ -205,7 +204,7 @@ class Player {
         if (this.swinging) {
             this.drawSword();
         } else {
-            this.anim_counter = 0;
+            this.anim_counter_sword = 0;
         }
 
         if (mouseIsPressed) {
@@ -215,7 +214,7 @@ class Player {
             }
         }
         
-        if ((mouseIsPressed) && this.has_dash && this.x_dir) {
+        if (keyIsDown(SHIFT) && this.has_dash && this.x_dir) {
             this.dash_timer = this.dash_length;
             this.has_dash = false;
             this.is_dashing = true;
