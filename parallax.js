@@ -8,7 +8,12 @@ class Parallax {
         this.mnts = new background_mountain(0, 0, 0, level_width);
     }
 
+    update() {
+        this.mnts.update();
+    }
+
     draw() {
+        this.update();
         this.mnts.draw();
     }
 }
@@ -21,6 +26,12 @@ class background_mountain {
         while (xcurr + MOUTNAIN_WIDTH < xmax) {
             this.mountains.push(new background_image(xcurr, 0, MOUTNAIN_WIDTH, height, sprites.background, 0.2));
             xcurr += MOUTNAIN_WIDTH;
+        }
+    }
+
+    update() {
+        for (let i = 0; i < this.mountains.length; i++) {
+            this.mountains[i].update();
         }
     }
 
@@ -41,9 +52,12 @@ class background_image {
         this.spd = speed;
     }
 
-    draw() {
+    update() {
         if (!game.camera_still)
             this.x -= game.player.vel.x * this.spd;
+    }
+
+    draw() {
         image(this.sprite, this.x, this.y, this.w, this.h);
     }
 }

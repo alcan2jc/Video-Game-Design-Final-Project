@@ -152,7 +152,7 @@ class mainMenu {
 
             //Player
             game.player.draw();
-            game.player.vel.x = game.player.xspd;
+            game.player.vel.x = game.player.max_xspd;
 
             if (game.player.x >= width + game.player.width) {
                 game.player.x = -game.player.width / 2;
@@ -166,35 +166,11 @@ class mainMenu {
                     game.player.jumps--;
                 }
             }
-            game.player.vel.y += game.player.yacc;
+            game.player.vel.y += game.player.gravity.y;
 
             let pos = game.player.playerCollision();
             game.player.x = pos[0];
             game.player.y = pos[1];
-
-            /*
-            game.player.draw();
-            game.player.xvel = game.player.xspd;
-
-            if (game.player.x >= width + game.player.width) {
-                game.player.x = -game.player.width / 2;
-                game.player.y = height - game.player.height - TILE_SIZE;
-            }
-
-            //player jumps
-            if (game.player.x >= width / 2.5 && game.player.x < width / 2) {
-                if (game.player.yvel === 0) {
-                    game.player.yvel = game.player.jmp_spd;
-                    game.player.jumps--;
-                }
-            }
-            game.player.yvel += game.player.yacc;
-
-            let pos = game.player.playerCollision();
-            game.player.x = pos[0];
-            game.player.y = pos[1];
-
-            */
 
             //Slime
             game.slimes[0].draw();

@@ -10,7 +10,7 @@ class Game {
         this.mainMenu = new mainMenu();
         this.tutorial = new Tutorial();
         this.parallax = new Parallax();
-        this.state = "main menu";
+        this.state = "game";
         this.camera_still = false;    // used for parallax algorithm
 
         this.loadTilemap(intro_tilemap);
@@ -75,9 +75,6 @@ class Game {
 
     game_state() {
         //draw background
-        
-        //image(sprites.background, 0, 0, width, height);
-
         this.translate_x = 0;
         this.camera_still = true;
 
@@ -95,7 +92,7 @@ class Game {
         translate(this.translate_x, 0);
 
         //drawHills
-        game.mainMenu.hill.draw();
+        //game.mainMenu.hill.draw();
 
         //bat
         for (let i = 0; i < game.bats.length; i++) {
@@ -106,13 +103,6 @@ class Game {
             if (bat.x < -bat.width) {
                 bat.x = width + bat.width;
             }
-        }
-
-        // update entities
-        this.player.update();
-
-        for (let i = 0; i < this.slimes.length; i++) {
-            this.slimes[i].update();
         }
 
         // draw entities
@@ -130,6 +120,7 @@ class Game {
             this.bats[i].draw();
         }
 
+        this.player.update();
         this.player.draw();
     }
 }
@@ -146,12 +137,12 @@ var intro_tilemap = [
     "                                                          ",
     "                                                          ",
     "                                                          ",
+    "                  ggggggggggggggg                         ",
     "                                                          ",
-    "                                                          ",
-    "                                                          ",
-    "                                                          ",
-    "                                                          ",
-    "                                                          ",
-    "                            s                             ",
+    "                                    ggggg  ggggg          ",
+    "                                        g  g              ",
+    "             ggg                        g  g              ",
+    "        ggg                             g  g              ",
+    "                      g     s           g  g              ",
     "  p                                                       ",
     "gggggggggggggttttggggggggggggggggggggggggggggggggggggggggg"];
