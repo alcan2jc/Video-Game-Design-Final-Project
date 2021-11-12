@@ -10,8 +10,12 @@ class Player {
         // constants
         this.jumps = 0;
         this.max_jumps = 1;
-        this.jmp_spd = -7.5;
-        this.jmp_spd_x = 10;
+        this.has_dash = true;
+        this.is_dashing = false;
+        this.dash_length = 15;
+        this.jmp_spd = -8.5;
+        this.jmp_spd_x = 15;
+        this.dash_spd = 15;
         this.max_xspd = 5;
         this.friction = 0.9;
 
@@ -28,6 +32,7 @@ class Player {
         this.anim_speed = 60 / 10; // frames per second
 
         this.x_dir = 0; // -1 left, 0 middle, 1 right
+        this.prev_key_pressed = false;
 
         this.touching_wall_x = false;
         this.touching_wall_y = false;
@@ -38,6 +43,11 @@ class Player {
         this.touching_wall_y = false;
 
         this.x_dir = (this.vel.x != 0) ? (this.vel.x > 0) ? 1 : -1 : 0;
+
+        this.vel.x *= this.friction;
+        if (abs(this.vel.x) < 0.1) {
+            this.vel.x = 0;
+        }
 
         let newx = this.x + this.vel.x;
 
@@ -85,13 +95,9 @@ class Player {
                         
                         this.touching_wall_y = true;
 
-                        this.vel.x *= this.friction;
-                        if (abs(this.vel.x) < 0.1) {
-                            this.vel.x = 0;
-                        }
-
                         if (this.vel.y > 0) {
                             this.jumps = this.max_jumps;
+                            this.has_dash = true;
                         }
 
                         this.vel.y = 0;
@@ -157,19 +163,34 @@ class Player {
             this.animation_state = 0;
         }
 
-        if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && ((this.jumps > 0 && this.vel.y == 0) || this.touching_wall_x)) {
-            if (!this.touching_wall_x) {
+        if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && !this.prev_key_pressed) {
+            if (!this.touching_wall_x && (this.jumps > 0 && this.vel.y == 0)) {
                 this.jump();
-            } else {
+            } else if (this.touching_wall_x) {
                 this.wall_jump();
             }
-        } else {
-            this.forces.add(this.gravity);
         }
 
+        if ((mouseIsPressed) && this.has_dash && this.x_dir) {
+            this.dash_timer = this.dash_length;
+            this.has_dash = false;
+            this.is_dashing = true;
+            this.dash_vel = this.dash_spd * this.x_dir;
+            this.vel.x = this.dash_vel;
+        } else if (this.is_dashing) {
+            this.vel.x = this.dash_vel;
+            this.dash_timer--;
+
+            if (this.dash_timer < 0)
+                this.is_dashing = false;
+        }
+
+        this.forces.add(this.gravity);
         this.vel.add(this.forces);
 
-        this.limit_speed();
+        this.prev_key_pressed = keyIsPressed && (keyIsDown(UP_ARROW) || keyIsDown(87));
+
+        //this.limit_speed();
 
         let newpos = this.playerCollision();
 

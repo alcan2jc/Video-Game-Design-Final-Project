@@ -11,7 +11,7 @@ class Game {
         this.mainMenu = new mainMenu();
         this.tutorial = new Tutorial();
         this.parallax = new Parallax();
-        this.state = "main menu";
+        this.state = "game";
         this.camera_still = false;    // used for parallax algorithm
 
         this.loadTilemap(intro_tilemap);
@@ -165,10 +165,10 @@ var intro_tilemap = [
     "                                                          ",
     "                  ggggggggggggggg                         ",
     "                                                          ",
-    "                                    ggggg  ggggg          ",
-    "                                        g  g              ",
-    "             ggg                        g  g              ",
-    "        ggg                             g  g              ",
-    "                      g     s           g  g              ",
+    "                                    ggggg    ggg          ",
+    "                                        g    g            ",
+    "             ggg                        g    g            ",
+    "        ggg                             g    g            ",
+    "                      g     s           g    g            ",
     "  p                                                       ",
     "gggggggggggggttttggggggggggggggggggggggggggggggggggggggggg"];

@@ -22,7 +22,7 @@ class background_mountain {
     constructor(x, y, xmin, xmax) {
         this.mountains = [];
 
-        let xcurr = xmin;
+        let xcurr = xmin - MOUTNAIN_WIDTH/2;
         while (xcurr + MOUTNAIN_WIDTH < xmax) {
             this.mountains.push(new background_image(xcurr, 0, MOUTNAIN_WIDTH, height, sprites.background, 0.2));
             xcurr += MOUTNAIN_WIDTH;
