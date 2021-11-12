@@ -1,5 +1,4 @@
-
-class Player {
+class Rat {
 
     constructor(x, y, w, h) {
         this.x = x;
@@ -11,8 +10,13 @@ class Player {
         this.jumps = 0;
         this.max_jumps = 1;
         this.jmp_spd = -7.5;
-        this.xspd = 3;
-        this.yacc = .3
+        this.xspd = 2;
+
+        //moving variable. 0 = idle, 1 = left, 2 = right. 
+        this.move = 0;
+
+        //life
+        this.dead = 0;
 
         this.vel = new p5.Vector(0, 0);
         this.acc = new p5.Vector(0, 0);
@@ -74,19 +78,28 @@ class Player {
         }
         return [newx, newy];
     }
+
     getSprite() {
         switch (this.animation_state) {
             // idle
-            case 0: return sprites.player_idle;
+            case 0: return sprites.rat_idle;
             // running
             case 1: {
                 if (!(frameCount % this.anim_speed)) {
                     this.anim_counter++;
-                    this.anim_counter %= 3;
+                    this.anim_counter %= 4;
                 }
-                return sprites.player_run[this.anim_counter];
+                return sprites.rat_run[this.anim_counter];
             }
-            case 2: return sprites.player_airborn;
+            case 2: return sprites.rat_hurt;
+
+            case 3: {
+                if (!(frameCount % this.anim_speed)) {
+                    this.anim_counter++;
+                    this.anim_counter %= 4;
+                }
+                return sprites.rat_dead[this.anim_counter];
+            }
 
             default:
                 print('Invalide animation State')
@@ -97,40 +110,26 @@ class Player {
 
     update() {
         this.vel.x = 0;
-
-        // controls
-        if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
+        if (this.move === 1) { //1 = left
             this.vel.x = -this.xspd;
         }
-        else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
+        else if (this.move === 2) { //2 = right
             this.vel.x = this.xspd;
         }
 
-        if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && this.jumps > 0 && this.vel.y == 0) {
-            this.vel.y = this.jmp_spd;
-            this.jumps--;
-        } else {
-            this.vel.y += this.yacc;
-        }
-
         let newpos = this.playerCollision();
-        
+
         if (this.vel.x == 0) {
             this.animation_state = 0;
-        } else if (this.vel.y != 0) {
-            this.animation_state = 2;
         } else {
             this.animation_state = 1;
         }
 
         this.x = newpos[0];
         this.y = newpos[1];
-
     }
 
-
     draw() {
-
         if (this.vel.x < 0) {
             push();
             scale(-1, 1);
@@ -140,7 +139,4 @@ class Player {
             image(this.getSprite(), this.x, this.y, this.width, this.height);
         }
     }
-
-
-
 }
