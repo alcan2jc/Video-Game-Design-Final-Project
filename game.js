@@ -9,7 +9,9 @@ class Game {
     constructor() {
         this.mainMenu = new mainMenu();
         this.tutorial = new Tutorial();
+        this.parallax = new Parallax();
         this.state = "main menu";
+        this.camera_still = false;    // used for parallax algorithm
 
         this.loadTilemap(intro_tilemap);
     }
@@ -19,6 +21,8 @@ class Game {
         this.slimes = [];
         this.bats = [];
         this.player = null;
+
+        this.level_width = tm[0].length * TILE_SIZE;
 
         for (let y = 0; y < tm.length; y++) {
             for (let x = 0; x < tm[0].length; x++) {
@@ -50,6 +54,8 @@ class Game {
                 }
             }
         }
+
+        this.parallax.setup_background(this.level_width);
     }
 
     update() {
@@ -69,7 +75,24 @@ class Game {
 
     game_state() {
         //draw background
-        image(sprites.background, 0, 0, width, height);
+        
+        //image(sprites.background, 0, 0, width, height);
+
+        this.translate_x = 0;
+        this.camera_still = true;
+
+        if (this.player.x >= width / 2 && this.player.x <= this.level_width - (width/2)) {
+            this.translate_x = -this.player.x + (width/2);
+            this.camera_still = false;
+        }
+        else if (this.player.x > this.level_width - (width/2)) {
+            this.translate_x = -this.level_width + width;
+            this.camera_still = true;
+        }
+        
+        this.parallax.draw();
+
+        translate(this.translate_x, 0);
 
         //drawHills
         game.mainMenu.hill.draw();
@@ -83,16 +106,6 @@ class Game {
             if (bat.x < -bat.width) {
                 bat.x = width + bat.width;
             }
-        }
-
-        if (game.player.x >= width + game.player.width) {
-            game.player.x = -game.player.width / 2;
-            game.player.y = height - game.player.height - TILE_SIZE;
-        }
-
-        if (game.player.x <= -game.player.width) {
-            game.player.x = width - (game.player.width / 2);
-            game.player.y = height - game.player.height - TILE_SIZE;
         }
 
         // update entities
@@ -122,23 +135,23 @@ class Game {
 }
 
 var intro_tilemap = [
-    "                              ",
-    "                              ",
-    "                              ",
-    "                       b b b  ",
-    "                        b b   ",
-    "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
-    "                            s ",
-    "  p                           ",
-    "gggggggggggggttttgggggggggggggggggggggggg"];
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                            s                             ",
+    "  p                                                       ",
+    "gggggggggggggttttggggggggggggggggggggggggggggggggggggggggg"];
