@@ -21,7 +21,17 @@ class Sprites {
             this.bat.push(loadImage('sprites/bat/bat' + str(i) + '.png'));
         }
 
-        // other
+        // rat sprites -> https://craftpix.net/freebies/free-street-animal-pixel-art-asset-pack/
+        this.rat_run = [];
+        this.rat_dead = [];
+        this.rat_idle = loadImage('sprites/rat_idle.png');
+        for (let i = 0; i < 4; i++) {
+            this.rat_run.push(loadImage('sprites/rat_run' + str(i) + '.png'));
+            this.rat_dead.push(loadImage('sprites/rat_dead' + str(i) + '.png'));
+        }
+        this.rat_hurt = loadImage('sprites/rat_hurt.png');
+
+        // environment
         this.dirt = loadImage('sprites/dirt.png');
         this.spike = loadImage('sprites/spike.png');
         this.background = loadImage('sprites/MountainBackground.png');

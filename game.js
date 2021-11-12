@@ -3,6 +3,7 @@ var TILE_SIZE = 32;
 var PLAYER_SIZE = 28;
 var SLIME_SIZE = 64;
 var BAT_SIZE = 64;
+var RAT_SIZE = 32;
 var SPIKE_SIZE = 32;
 
 class Game {
@@ -20,6 +21,7 @@ class Game {
         this.blocks = [];
         this.slimes = [];
         this.bats = [];
+        this.rats = [];
         this.player = null;
 
         this.level_width = tm[0].length * TILE_SIZE;
@@ -43,6 +45,10 @@ class Game {
                     }
                     case 'b': {
                         this.bats.push(new Bat(x * TILE_SIZE, y * TILE_SIZE, BAT_SIZE, BAT_SIZE));
+                        break;
+                    }
+                    case 'r': {
+                        this.rats.push(new Rat(x * TILE_SIZE, y * TILE_SIZE, RAT_SIZE, RAT_SIZE));
                         break;
                     }
                     case 't': {
@@ -105,6 +111,30 @@ class Game {
             }
         }
 
+        //rat
+        for (let i = 0; i < game.rats.length; i++) {
+            let rat = game.rats[i];
+            rat.draw(); 
+            
+            if (rat.x < -rat.width) {
+                rat.x = width + rat.width;
+            }
+
+            if (rat.x >= width + rat.width) {
+                rat.x = -rat.width/2;
+            }
+        }
+
+        if (game.player.x >= width + game.player.width) {
+            game.player.x = -game.player.width / 2;
+            game.player.y = height - game.player.height - TILE_SIZE;
+        }
+
+        if (game.player.x <= -game.player.width) {
+            game.player.x = width - (game.player.width / 2);
+            game.player.y = height - game.player.height - TILE_SIZE;
+        }
+
         // draw entities
         for (let i = 0; i < this.blocks.length; i++) {
             this.blocks[i].draw();
@@ -118,6 +148,12 @@ class Game {
         // draw bats
         for (let i = 0; i < this.bats.length; i++) {
             this.bats[i].draw();
+        }
+
+        // draw rats
+        for (let i = 0; i < this.rats.length; i++) {
+            this.rats[i].update();
+            this.rats[i].draw();
         }
 
         this.player.update();

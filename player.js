@@ -145,7 +145,7 @@ class Player {
         this.forces.x = 0;
         this.forces.y = 0;
 
-        // controlls
+        // controls
         if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
             //this.vel.x = -this.xspd;
             this.forces.add(this.xacc_n);
