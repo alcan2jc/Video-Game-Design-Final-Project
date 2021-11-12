@@ -24,8 +24,21 @@ class Player {
         this.swinging = false;
         this.lastDir = 'right';
 
+        this.has_dash = true;
+        this.is_dashing = false;
+        this.dash_length = 15;
+        this.jmp_spd = -8.5;
+        this.jmp_spd_x = 15;
+        this.dash_spd = 15;
+        this.max_xspd = 5;
+        this.friction = 0.9;
+
+        this.forces = new p5.Vector(0, 0);
+
+        this.xacc = new p5.Vector(.75, 0);
+        this.xacc_n = new p5.Vector(-.75, 0);
+        this.gravity = new p5.Vector(0, 0.3);
         this.vel = new p5.Vector(0, 0);
-        this.acc = new p5.Vector(0, 0);
 
         // 0: idle 
         // 1: running 
@@ -36,28 +49,48 @@ class Player {
         this.anim_speed = 60 / 10; // frames per second
         this.anim_speed_sword = 60 / 10; // frames per second
 
+        this.x_dir = 0; // -1 left, 0 middle, 1 right
+        this.prev_key_pressed = false;
+
+        this.touching_wall_x = false;
+        this.touching_wall_y = false;
     }
 
     playerCollision() {
-        let newx = this.x + this.vel.x
+        this.touching_wall_x = false;
+        this.touching_wall_y = false;
+
+        this.x_dir = (this.vel.x != 0) ? (this.vel.x > 0) ? 1 : -1 : 0;
+
+        this.vel.x *= this.friction;
+        if (abs(this.vel.x) < 0.1) {
+            this.vel.x = 0;
+        }
+
+        let newx = this.x + this.vel.x;
 
         // wall collision
-        //x
-        for (let i = 0; i < game.blocks.length; i++) {
-            let block = game.blocks[i];
+        if (this.vel.x != 0) {
+            //x
+            for (let i = 0; i < game.blocks.length; i++) {
+                let block = game.blocks[i];
 
-            let d = abs(this.x - block.x) + abs(this.y - block.y);
+                let d = abs(this.x - block.x) + abs(this.y - block.y);
 
-            if (d < 50) {
+                if (d < 100) {
 
-                if (
-                    newx + this.width > block.x &&
-                    newx < block.x + block.width &&
-                    this.y + this.height > block.y &&
-                    this.y < block.y + block.height) {
-
-                    newx = this.x;
-                    break;
+                    if (
+                        newx + this.width > block.x &&
+                        newx < block.x + block.width &&
+                        this.y + this.height > block.y &&
+                        this.y < block.y + block.height) {
+                        
+                        this.touching_wall_x = true;
+                        
+                        this.vel.x = 0;
+                        newx = this.x;
+                        break;
+                    }
                 }
             }
         }
@@ -65,30 +98,37 @@ class Player {
         // y
         let newy = this.y + this.vel.y;
 
-        for (let i = 0; i < game.blocks.length; i++) {
-            let block = game.blocks[i];
+        if (this.vel.y != 0) {
+            for (let i = 0; i < game.blocks.length; i++) {
+                let block = game.blocks[i];
 
-            let d = abs(this.x - block.x) + abs(this.y - block.y);
+                let d = abs(this.x - block.x) + abs(this.y - block.y);
 
-            if (d < 50) {
-                if (
-                    newx + this.width > block.x &&
-                    newx < block.x + block.width &&
-                    newy + this.height > block.y &&
-                    newy < block.y + block.height) {
+                if (d < 100) {
+                    if (
+                        newx + this.width > block.x &&
+                        newx < block.x + block.width &&
+                        newy + this.height > block.y &&
+                        newy < block.y + block.height) {
+                        
+                        this.touching_wall_y = true;
 
-                    if (this.vel.y > 0) {
-                        this.jumps = this.max_jumps;
+                        if (this.vel.y > 0) {
+                            this.jumps = this.max_jumps;
+                            this.has_dash = true;
+                        }
+
+                        this.vel.y = 0;
+                        newy = this.y;
+                        break;
                     }
-
-                    this.vel.y = 0;
-                    newy = this.y;
-                    break;
                 }
             }
         }
+
         return [newx, newy];
     }
+
     getSprite() {
         switch (this.animation_state) {
             // idle
@@ -120,27 +160,46 @@ class Player {
         }
         return sprites.sword[this.anim_counter];
     }
+    jump() {
+        this.vel.y = this.jmp_spd;
+        this.jumps--;
+    }
+
+    wall_jump() {
+        this.jump();
+        this.vel.x = this.jmp_spd_x * -this.x_dir;
+    }
+
+    limit_speed() {
+        this.vel.x = (abs(this.vel.x) > this.max_xspd) ? (this.vel.x > 0) ? this.max_xspd : -this.max_xspd : this.vel.x;
+    }
 
     update() {
-        this.vel.x = 0;
+        //this.vel.x = 0;
+        this.forces.x = 0;
+        this.forces.y = 0;
 
         // controls
-        if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) { //left
-            this.vel.x = -this.xspd;
+        if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
+            //this.vel.x = -this.xspd;
+            this.forces.add(this.xacc_n);
             this.lastDir = 'left';
         }
-        else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) { //right
-            this.vel.x = this.xspd;
+        else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
+            //this.vel.x = this.xspd;
+            this.forces.add(this.xacc);
             this.lastDir = 'right';
-        }
-
-        if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && this.jumps > 0 && this.vel.y == 0) { //jump
-            this.vel.y = this.jmp_spd;
-            this.jumps--;
         } else {
-            this.vel.y += this.yacc;
+            this.animation_state = 0;
         }
 
+        if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && !this.prev_key_pressed) {
+            if (!this.touching_wall_x && (this.jumps > 0 && this.vel.y == 0)) {
+                this.jump();
+            } else if (this.touching_wall_x) {
+                this.wall_jump();
+            }
+        }
 
         //slashing
         if (this.swinging) {
@@ -155,9 +214,31 @@ class Player {
                 this.swinging = true;
             }
         }
+        
+        if ((mouseIsPressed) && this.has_dash && this.x_dir) {
+            this.dash_timer = this.dash_length;
+            this.has_dash = false;
+            this.is_dashing = true;
+            this.dash_vel = this.dash_spd * this.x_dir;
+            this.vel.x = this.dash_vel;
+        } else if (this.is_dashing) {
+            this.vel.x = this.dash_vel;
+            this.dash_timer--;
+
+            if (this.dash_timer < 0)
+                this.is_dashing = false;
+        }
+
+        this.forces.add(this.gravity);
+        this.vel.add(this.forces);
+
+        this.prev_key_pressed = keyIsPressed && (keyIsDown(UP_ARROW) || keyIsDown(87));
+
+        //this.limit_speed();
+
         let newpos = this.playerCollision();
 
-        if (this.vel.x == 0) {
+        if (this.x_dir == 0) {
             this.animation_state = 0;
         } else if (this.vel.y != 0) {
             this.animation_state = 2;
@@ -167,12 +248,11 @@ class Player {
 
         this.x = newpos[0];
         this.y = newpos[1];
-
     }
 
 
     draw() {
-        if (this.vel.x < 0) {
+        if (this.x_dir == -1) {
             push();
             scale(-1, 1);
             image(this.getSprite(), -this.x - this.width, this.y, this.width, this.height);
