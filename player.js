@@ -14,8 +14,8 @@ class Player {
         this.xspd = 3;
         this.yacc = .3
 
-        this.yvel = 0;
-        this.xvel = 0;
+        this.vel = new p5.Vector(0, 0);
+        this.acc = new p5.Vector(0, 0);
 
         // 0: idle 1: running 2: airborn
         this.animation_state = 1;
@@ -24,7 +24,7 @@ class Player {
     }
 
     playerCollision() {
-        let newx = this.x + this.xvel;
+        let newx = this.x + this.vel.x
 
         // wall collision
         //x
@@ -48,7 +48,7 @@ class Player {
         }
 
         // y
-        let newy = this.y + this.yvel;
+        let newy = this.y + this.vel.y;
 
         for (let i = 0; i < game.blocks.length; i++) {
             let block = game.blocks[i];
@@ -62,11 +62,11 @@ class Player {
                     newy + this.height > block.y &&
                     newy < block.y + block.height) {
 
-                    if (this.yvel > 0) {
+                    if (this.vel.y > 0) {
                         this.jumps = this.max_jumps;
                     }
 
-                    this.yvel = 0;
+                    this.vel.y = 0;
                     newy = this.y;
                     break;
                 }
@@ -96,29 +96,28 @@ class Player {
     }
 
     update() {
-
-        this.xvel = 0;
+        this.vel.x = 0;
 
         // controlls
         if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
-            this.xvel = -this.xspd;
+            this.vel.x = -this.xspd;
         }
         else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
-            this.xvel = this.xspd;
+            this.vel.x = this.xspd;
         }
 
-        if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && this.jumps > 0 && this.yvel === 0) {
-            this.yvel = this.jmp_spd;
+        if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && this.jumps > 0 && this.vel.y == 0) {
+            this.vel.y = this.jmp_spd;
             this.jumps--;
         } else {
-            this.yvel += this.yacc;
+            this.vel.y += this.yacc;
         }
 
         let newpos = this.playerCollision();
-        print(newpos);
-        if (this.xvel == 0) {
+        
+        if (this.vel.x == 0) {
             this.animation_state = 0;
-        } else if (this.yvel != 0) {
+        } else if (this.vel.y != 0) {
             this.animation_state = 2;
         } else {
             this.animation_state = 1;
@@ -132,7 +131,7 @@ class Player {
 
     draw() {
 
-        if (this.xvel < 0) {
+        if (this.vel.x < 0) {
             push();
             scale(-1, 1);
             image(this.getSprite(), -this.x - this.width, this.y, this.width, this.height);

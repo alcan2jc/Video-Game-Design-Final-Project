@@ -107,7 +107,6 @@ class Slime {
     draw() {
 
         image(this.getSprite(), this.x, this.y, this.width, this.height);
-        print(this.x, this.y);
 
         /*
         if (this.xvel < 0) {
