@@ -15,11 +15,19 @@ class Sprites {
         this.slime_squished = loadImage('sprites/slime_idle.png');
         this.slime_tall = loadImage('sprites/slime_tall.png');
 
+        //sword sprites
+        this.sword = [];
+        for (let i = 0; i < 3; i++) {
+            this.sword.push(loadImage('sprites/slash' + str(i) + '.png'));
+        }
+
         // bat sprites
         this.bat = [];
         for (let i = 0; i < 12; i++) {
             this.bat.push(loadImage('sprites/bat/bat' + str(i) + '.png'));
         }
+
+
 
         // rat sprites -> https://craftpix.net/freebies/free-street-animal-pixel-art-asset-pack/
         this.rat_run = [];

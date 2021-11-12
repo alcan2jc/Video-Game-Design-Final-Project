@@ -27,7 +27,7 @@ class Rat {
         this.anim_speed = 60 / 10; // frames per second
     }
 
-    playerCollision() {
+    wallCollision() {
         let newx = this.x + this.vel.x
 
         // wall collision
@@ -117,7 +117,12 @@ class Rat {
             this.vel.x = this.xspd;
         }
 
-        let newpos = this.playerCollision();
+        //Only check sword collision when player is swinging.
+        if (game.player.swinging) {
+            this.checkSwordCollision();
+        }
+
+        let newpos = this.wallCollision();
 
         if (this.vel.x == 0) {
             this.animation_state = 0;
@@ -127,6 +132,10 @@ class Rat {
 
         this.x = newpos[0];
         this.y = newpos[1];
+    }
+
+    checkSwordCollision() {
+        
     }
 
     draw() {

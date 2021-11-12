@@ -188,6 +188,6 @@ var intro_tilemap = [
     "                                                          ",
     "                                                          ",
     "                                                          ",
-    "                            s                             ",
+    "    s                                                     ",
     "  p                                                       ",
     "gggggggggggggttttggggggggggggggggggggggggggggggggggggggggg"];
