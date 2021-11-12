@@ -18,6 +18,8 @@ class Slime {
         this.yvel = 0;
         this.xvel = 0;
 
+        this.anim_counter = 0;
+
         this.jump_state = 0; // 0: idle, 1: squished, 2: tall
     }
 
@@ -32,9 +34,23 @@ class Slime {
 
     getSprite() {
         switch (this.jump_state) {
-            case 0: return sprites.slime_idle;
+            case 0: {
+                this.anim_counter--;
+                if (this.anim_counter < 0) {
+                    this.jump_state = 2;
+                    this.anim_counter = 60;
+                }
+                return sprites.slime_idle;
+            }
             case 1: return sprites.slime_squished;
-            case 2: return sprites.slime_tall;
+            case 2: {
+                this.anim_counter--;
+                if (this.anim_counter < 0) {
+                    this.jump_state = 0;
+                    this.anim_counter = 60;
+                }
+                return sprites.slime_tall;
+            }
 
             default: break;
         }
