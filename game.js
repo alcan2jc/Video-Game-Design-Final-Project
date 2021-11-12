@@ -11,7 +11,7 @@ class Game {
         this.mainMenu = new mainMenu();
         this.tutorial = new Tutorial();
         this.parallax = new Parallax();
-        this.state = "game";
+        this.state = "main menu";
         this.camera_still = false;    // used for parallax algorithm
 
         this.loadTilemap(intro_tilemap);
@@ -123,16 +123,6 @@ class Game {
             if (rat.x >= width + rat.width) {
                 rat.x = -rat.width/2;
             }
-        }
-
-        if (game.player.x >= width + game.player.width) {
-            game.player.x = -game.player.width / 2;
-            game.player.y = height - game.player.height - TILE_SIZE;
-        }
-
-        if (game.player.x <= -game.player.width) {
-            game.player.x = width - (game.player.width / 2);
-            game.player.y = height - game.player.height - TILE_SIZE;
         }
 
         // draw entities
