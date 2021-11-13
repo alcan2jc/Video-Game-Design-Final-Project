@@ -5,11 +5,23 @@ class Page {
 
     drawPage() {
         if (this.page === 0) {
-            text("Press right arrow key to move right", width / 2, height / 4);
-            text("Press left arrow key to move left", width / 2, height / 3.2);
-            text("Press up arrow key to jump", width / 2, height / 2.7);
+            textStyle(BOLD);
+            text("Movement", width / 2, height / 4.1);
+            textStyle(NORMAL);
+            text("Press D to move right", width / 2, height / 3.2);
+            text("Press A to move left", width / 2, height / 2.6);
+            text("Press W to jump", width / 2, height / 2.15);
+            text("Press MB1 to swing sword", width / 2, height / 1.8);
+            text("Move towards awall and jump (W) while touching the wall", width / 2, height / 1.5);
+            text("to perform a wall jump", width / 2, height / 1.3);
+            
         } else if (this.page === 1) {
-            text("Coming Soon 1", width / 2, height / 2);
+            textStyle(BOLD);
+            text("Gameplay", width / 2, height / 4);
+            textStyle(NORMAL);
+            text("Kill enemies by hitting them with your sword enough times", width / 2, height / 3.2);
+            text("Touching enemies will make you lose health.", width / 2, height / 2.7);
+            text("Your health bar is at the top left", width / 2, height / 2.2);
         } else if (this.page === 2) {
             text("Coming Soon 2", width / 2, height / 2);
         } else if (this.page === 3) {

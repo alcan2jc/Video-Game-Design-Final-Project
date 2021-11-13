@@ -19,7 +19,7 @@ class Rat {
         this.xspd = 2;
 
         //moving variable. 0 = idle, 1 = left, 2 = right. 
-        this.move = 2;
+        this.move = 0;
 
         //game vars
         this.dead = false;
@@ -40,7 +40,7 @@ class Rat {
         this.anim_counter_hurt = 0;
         this.anim_counter_dead = 0;
         this.anim_speed = 60 / 10; // frames per second
-        this.anim_speed_hurt = 60 / 5; // frames per second
+        this.anim_speed_hurt = 60 / 2; // frames per second
         this.anim_speed_dead = 60 / 10; // frames per second
     }
 
@@ -118,8 +118,9 @@ class Rat {
                 }
                 return sprites.rat_hurt[this.anim_counter_hurt];
             }
-
-            case 3: {
+            
+            //dead
+            case 3: { 
                 if (!(frameCount % this.anim_speed_dead)) {
                     this.anim_counter_dead++;
                     this.anim_counter_dead %= 4;
@@ -132,7 +133,7 @@ class Rat {
             }
 
             default:
-                print('Invalide animation State')
+                print('Invalide animation State');
         }
 
         return null;

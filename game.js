@@ -196,5 +196,5 @@ var intro_tilemap = [
     "g            ggg                        g    g           g",
     "g       ggg                             g    g           g",
     "g                     g     s           g    g           g",
-    "g p                                                      g",
+    "g p   r                                                  g",
     "gggggggggggggttttggggggggggggggggggggggggggggggggggggggggg"];

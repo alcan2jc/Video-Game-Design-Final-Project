@@ -24,18 +24,24 @@ class Slime {
         this.yvel = 0;
         this.xvel = 0;
 
-<<<<<<< HEAD
         //Invicibility frames after getting hit.
         this.invincibility = 0.5;
         this.invincibilityFrame = 0;
 
         //gameplay vars
-        this.lives = 2;
-=======
         this.anim_counter = 0;
->>>>>>> 9275ba12c42666e90ffbc63e0adaf59320dcdbfd
+        this.dead = false;
+        this.hurt = false;
+        this.anim_counter_hurt = 0;
+        this.anim_counter_dead = 0;
+        this.lives = 5;
 
-        this.jump_state = 0; // 0: idle, 1: squished, 2: tall
+        this.animation_state = 0; // 0: idle, 1: squished, 2: tall
+        this.anim_counter_hurt = 0;
+        this.anim_counter_dead = 0;
+        this.anim_speed = 60 / 10; // frames per second
+        this.anim_speed_hurt = 60 / 2; // frames per second
+        this.anim_speed_dead = 60 / 10; // frames per second
     }
 
     FSM() {
@@ -48,26 +54,32 @@ class Slime {
     }
 
     getSprite() {
-        switch (this.jump_state) {
-            case 0: {
-                this.anim_counter--;
-                if (this.anim_counter < 0) {
-                    this.jump_state = 2;
-                    this.anim_counter = 60;
-                }
-                return sprites.slime_idle;
+        switch (this.animation_state) {
+            case 0: return sprites.slime_idle; //idle
+            case 1: { //hurt
+                // if (!(frameCount % this.anim_speed_hurt)) {
+                //     this.anim_counter_hurt++;
+                //     this.anim_counter_hurt %= 1;
+                //     if (this.anim_counter_hurt === 0)
+                //         this.hurt = false;
+                // }
+                if (!(frameCount % this.anim_speed_hurt))
+                    this.hurt = false;
+                return sprites.slime_hurt;
             }
-            case 1: return sprites.slime_squished;
             case 2: {
-                this.anim_counter--;
-                if (this.anim_counter < 0) {
-                    this.jump_state = 0;
-                    this.anim_counter = 60;
+                if (!(frameCount % this.anim_speed_dead)) {
+                    this.anim_counter_dead++;
+                    this.anim_counter_dead %= 3;
+                    if (this.anim_counter_dead === 0) {
+                        this.x = -100;
+                        this.y = -100;
+                    }
                 }
-                return sprites.slime_tall;
+                return sprites.slime_dead[this.anim_counter_dead];
             }
-
-            default: break;
+            default:
+                print('Invalide animation State');
         }
 
         return null;
@@ -75,62 +87,72 @@ class Slime {
 
     checkSwordCollision() {
         if (game.player.lastDir === 'left') {
-            if ((frameCount - this.invincibilityFrame) > this.invincibility*60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX - 2.5*game.player.width, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight/5)) {
+            if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX - 2.5 * game.player.width, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
                 this.invincibilityFrame = frameCount;
                 this.lives--;
+                if (this.lives > 0) {
+                    this.hurt = true;
+                } else {
+                    this.dead = true;
+                }
             }
         } else {
-            if ((frameCount - this.invincibilityFrame) > this.invincibility*60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight/5)) {
+            if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
                 this.invincibilityFrame = frameCount;
                 this.lives--;
+                if (this.lives > 0) {
+                    this.hurt = true;
+                } else {
+                    this.dead = true;
+                }
             }
         }
     }
-    
+
     update() {
-          
+
         /* Insert AI logic here */
         //this.FSM();
 
         this.yvel += this.yacc;
-        
+
         let newx = this.x + this.xvel;
-        
+
         // wall collision
         //x
         for (let i = 0; i < game.blocks.length; i++) {
             let block = game.blocks[i];
-            
+
             let d = abs(this.x - block.x) + abs(this.y - block.y);
-            
+
             if (d < 90) {
-        
+
                 if (
-                newx + this.width > block.x && 
-                newx < block.x + block.width && 
-                this.y + this.height > block.y && 
-                this.y < block.y + block.height) {
+                    newx + this.width > block.x &&
+                    newx < block.x + block.width &&
+                    this.y + this.height > block.y &&
+                    this.y < block.y + block.height) {
 
                     newx = this.x;
                     break;
                 }
             }
         }
-        
+
         // y
         let newy = this.y + this.yvel;
-        
+
         for (let i = 0; i < game.blocks.length; i++) {
             let block = game.blocks[i];
-            
+
             let d = abs(this.x - block.x) + abs(this.y - block.y);
-            
+
             if (d < 90) {
                 if (
-                newx + this.width > block.x && 
-                newx < block.x + block.width && 
-                newy + this.height > block.y && 
-                newy < block.y + block.height) {
+                    newx + this.width > block.x &&
+                    newx < block.x + block.width &&
+                    newy + this.height > block.y &&
+                    newy < block.y + block.height) {
 
                     if (this.yvel > 0) {
                         this.jumps = this.max_jumps;
@@ -142,7 +164,7 @@ class Slime {
                 }
             }
         }
-    
+
         this.x = newx;
         this.y = newy;
 
@@ -150,15 +172,24 @@ class Slime {
         if (game.player.swinging) {
             this.checkSwordCollision();
         }
+        
+        if (this.xvel === 0) {
+            this.animation_state = 0;
+        }
 
-        if (this.lives === 0) {
-            this.anim_counter = 1;
+        if (this.hurt) {
+            this.animation_state = 1;
+        }
+
+        if (this.dead) {
+            this.animation_state = 2;
         }
     }
 
     draw() {
         this.update();
 
+        print(this.dead);
         image(this.getSprite(), this.x, this.y, this.width, this.height);
 
         /*
