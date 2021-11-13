@@ -19,7 +19,7 @@ class Rat {
         this.xspd = 2;
 
         //moving variable. 0 = idle, 1 = left, 2 = right. 
-        this.move = 0;
+        this.move = 2;
 
         //game vars
         this.dead = false;

@@ -191,7 +191,6 @@ class Slime {
     draw() {
         this.update();
 
-        print(this.dead);
         image(this.getSprite(), this.x, this.y, this.width, this.height);
 
         /*

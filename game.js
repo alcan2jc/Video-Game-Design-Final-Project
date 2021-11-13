@@ -103,7 +103,7 @@ class Game {
 
 
         //drawHills
-        //game.mainMenu.hill.draw();
+        // game.mainMenu.hill.draw();
 
         //bat
         for (let i = 0; i < game.bats.length; i++) {
@@ -146,6 +146,14 @@ class Game {
             this.rats[i].draw();
         }
 
+        let rat = this.rats[0];
+        if (rat.x < 560) {
+            rat.move = 2;
+        }
+
+        if (rat.x > 1750) {
+            rat.move = 1;
+        }
         this.animator.draw();
 
         this.player.update();
@@ -198,5 +206,5 @@ var intro_tilemap = [
     "g            ggg                        g    g           g",
     "g       ggg                             g    g           g",
     "g                     g     s           g    g           g",
-    "g p    r                                                 g",
+    "g p              r                                       g",
     "gggggggggggggttttggggggggggggggggggggggggggggggggggggggggg"];
