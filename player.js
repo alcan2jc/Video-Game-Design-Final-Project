@@ -165,6 +165,7 @@ class Player {
     jump() {
         this.vel.y = this.jmp_spd;
         this.jumps--;
+        game.animator.jumpEffect(this.x + this.width/2, this.y + this.height);
     }
 
     wall_jump() {

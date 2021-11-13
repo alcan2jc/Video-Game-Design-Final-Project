@@ -8,13 +8,16 @@ var SPIKE_SIZE = 32;
 
 class Game {
     constructor() {
-        this.mainMenu = new mainMenu();
-        this.tutorial = new Tutorial();
-        this.parallax = new Parallax();
-        this.state = "game";
         this.camera_still = false;    // used for parallax algorithm
 
-        this.loadTilemap(intro_tilemap);
+        this.parallax = new Parallax();
+        this.animator = new Animator();
+
+        this.loadTilemap(mainmenu_tilemap);
+
+        this.mainMenu = new mainMenu();
+        this.tutorial = new Tutorial();
+        this.state = "main menu";
     }
 
     loadTilemap(tm) {
@@ -60,7 +63,6 @@ class Game {
                 }
             }
         }
-
         this.parallax.setup_background(this.level_width);
     }
 
@@ -146,10 +148,35 @@ class Game {
             this.rats[i].draw();
         }
 
+        this.animator.draw();
+
         this.player.update();
         this.player.draw();
     }
 }
+
+var mainmenu_tilemap = [
+    "                                  ",
+    "                             ",
+    "                             ",
+    "        ggggg                ",
+    "                             ",
+    "                         ggg ",
+    "                         ggg ",
+    "           ggg           ggg ",
+    "                             ",
+    "                             ",
+    "                             ",
+    "                  gggg  gg   ",
+    "                             ",
+    "                             ",
+    "                             ",
+    "                             ",
+    "        ggg                  ",
+    "                      g     s",
+    "  p                          ",
+    "gggggggggggggttttggggggggggggggggggg",
+];
 
 var intro_tilemap = [
     "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
