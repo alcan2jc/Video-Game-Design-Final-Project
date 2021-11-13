@@ -1,6 +1,11 @@
 
+// enemy for player to fight
 class Bat {
 
+    // x positoin
+    // y position
+    // width of sprite
+    // height of sprite
     constructor(x, y, w, h) {
         this.x = x;
         this.y = y;
@@ -14,6 +19,7 @@ class Bat {
         this.anim_counter = 0;
     }
 
+    // returns current sprite in animation
     getSprite() {
         if (!(frameCount % this.anim_speed)) {
             this.anim_counter++;
@@ -28,6 +34,7 @@ class Bat {
     }
 
 
+    // draws bat to canvas
     draw() {
 
         image(this.getSprite(), this.x, this.y, this.width, this.height);

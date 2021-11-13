@@ -1,3 +1,7 @@
+
+// Animator class
+/* Sorts animations and plays them.
+destroys animations when over */
 class Animator {
     constructor() {
       this.timer = 0;
@@ -21,6 +25,7 @@ class Animator {
       this.hit_cd--;
     }
 
+    // x, y position for effect to play
     jumpEffect(x, y) {
         this.anim.push(new jump_effect(x, y));
     }
@@ -32,11 +37,13 @@ class Animator {
       }
     }
     
+    // x, y position for effect to play
     collectEffect(x, y) {
       this.anim.push(new collect_money(x, y));
     }
   }
 
+// Genaric pariccal container class
   class Particle {
       constructor(x, y, radius, color, speed, direction) {
         this.x = x;
@@ -57,6 +64,8 @@ class Animator {
       }
   }
 
+  // effect played when player jumps
+  // puf of particles underneath the player
   class jump_effect {
       constructor(x, y) {
         this.particles = [];
@@ -80,6 +89,8 @@ class Animator {
       }
   }
     
+  // effect played when player takes damage
+  // screen temporarily flashes red
   class hit_a {
     constructor() {
       this.end = false;
@@ -95,29 +106,11 @@ class Animator {
 
       if (this.alpha < 0)
         this.end = true;
-      
-
-      /*
-      push()
-      if (game.player.x >= width / 2 && game.player.x <= (3/2) * width)
-        translate(game.player.x - (width/2), 0);
-      else if (game.player.x > (3/2) * width)
-        translate(width, 0);
-      
-      fill(255, 0, 0, this.alpha);
-      rect(0, 0, width, height);
-      
-      this.alpha -= 5;
-      
-      if (this.alpha < 0)
-        this.end = true;
-      
-      pop();
-      */
     }
     
   }
   
+  // Old animation, Not currently in use
   class collect_money {
     constructor(x, y) {
       this.alpha = 255;

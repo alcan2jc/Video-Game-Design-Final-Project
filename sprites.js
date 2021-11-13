@@ -1,6 +1,9 @@
 
+
+// class that contains all imported sprites
 class Sprites {
 
+    // imports sprites from files
     constructor() {
         // player sprites
         this.player_idle = loadImage('sprites/player_idle.png');
@@ -54,7 +57,7 @@ class Sprites {
         this.background = loadImage('sprites/MountainBackground.png');
     }
 
-
+    // function for testing images
     test() {
         image(this.player_run[0], 0, 0, 20, 20);
     }

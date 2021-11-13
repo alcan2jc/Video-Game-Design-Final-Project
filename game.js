@@ -6,7 +6,11 @@ var BAT_SIZE = 64;
 var RAT_SIZE = 32;
 var SPIKE_SIZE = 32;
 
+// game container class
+// runs the game
 class Game {
+
+    // sets up game state 
     constructor() {
         this.camera_still = false;    // used for parallax algorithm
 
@@ -21,6 +25,8 @@ class Game {
         this.state = "main menu";
     }
 
+    // loads given timemal
+    // tm: the tilemap to load
     loadTilemap(tm) {
         this.blocks = [];
         this.spikes = [];
@@ -68,6 +74,8 @@ class Game {
         this.parallax.setup_background(this.level_width);
     }
 
+    // FSM for game state
+    // determies which state to run
     update() {
         switch (game.state) {
             case "main menu": // main menu
@@ -83,6 +91,7 @@ class Game {
         }
     }
 
+    // the state for when the game is going
     game_state() {
         //draw background
         this.translate_x = 0;
@@ -164,6 +173,7 @@ class Game {
     }
 }
 
+// tilemaps
 var mainmenu_tilemap = [
     "                                  ",
     "                             ",
