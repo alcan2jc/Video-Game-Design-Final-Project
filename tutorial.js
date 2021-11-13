@@ -1,8 +1,10 @@
+//A tutorial page
 class Page {
     constructor(page) {
         this.page = page;
     }
 
+    //Draws the pages based on the current page. 
     drawPage() {
         if (this.page === 0) {
             textStyle(BOLD);
@@ -32,6 +34,7 @@ class Page {
     }
 }
 
+//Tutorial class. Contains buttons, pages, and logic for pressing buttons. 
 class Tutorial {
     constructor() {
         this.buttonWidth = 100;
@@ -45,6 +48,7 @@ class Tutorial {
         this.prevFrameCount = 0;
     }
 
+    //draws buttons. 
     drawButton(label, x, y) {
         if (withinBounds(mouseX, mouseY, x, y, 1, 1, this.buttonWidth, this.buttonHeight)) {
             fill('orange')
@@ -71,6 +75,7 @@ class Tutorial {
         text(label, x + 50, y + 25);
     }
 
+    //Draws the background, text, and buttons. 
     drawTutorial() {
         image(sprites.background, 0, 0, width, height);
 
