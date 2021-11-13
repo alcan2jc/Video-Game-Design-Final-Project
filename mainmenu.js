@@ -150,6 +150,10 @@ class mainMenu {
                 game.blocks[i].draw();
             }
 
+            for (let i = 0; i < game.spikes.length; i++) {
+                game.spikes[i].draw();
+            }
+
             //Player
             game.player.draw();
             game.player.vel.x = game.player.max_xspd;

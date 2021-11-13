@@ -24,16 +24,13 @@ class Slime {
         this.yvel = 0;
         this.xvel = 0;
 
-<<<<<<< HEAD
         //Invicibility frames after getting hit.
         this.invincibility = 0.5;
         this.invincibilityFrame = 0;
 
         //gameplay vars
         this.lives = 2;
-=======
         this.anim_counter = 0;
->>>>>>> 9275ba12c42666e90ffbc63e0adaf59320dcdbfd
 
         this.jump_state = 0; // 0: idle, 1: squished, 2: tall
     }

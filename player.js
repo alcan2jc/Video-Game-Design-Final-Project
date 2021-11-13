@@ -32,6 +32,7 @@ class Player {
         this.dash_spd = 15;
         this.max_xspd = 5;
         this.friction = 0.9;
+        this.health = 100;
 
         this.forces = new p5.Vector(0, 0);
 
@@ -124,6 +125,79 @@ class Player {
                         newy = this.y;
                         break;
                     }
+                }
+            }
+        }
+
+        // spike collision
+        for (let i = 0; i < game.spikes.length; i++) {
+            let block = game.spikes[i];
+
+            let d = abs(this.x - block.x) + abs(this.y - block.y);
+
+            if (d < 100) {
+                if (
+                    newx + this.width > block.x &&
+                    newx < block.x + block.width &&
+                    newy + this.height > block.y &&
+                    newy < block.y + block.height) {
+                    
+                    this.touching_wall_y = true;
+
+                    if (this.vel.y > 0) {
+                        this.jumps = this.max_jumps;
+                        this.has_dash = true;
+                    }
+
+                    this.vel.y = 0;
+                    newy = this.y;
+
+                    game.player.health = max(0, --game.player.health);
+                    game.animator.hitEffect();
+                    break;
+                }
+            }
+        }
+
+        // slimes
+        for (let i = 0; i < game.slimes.length; i++) {
+            let slime = game.slimes[i];
+
+            let d = abs(this.x - slime.x) + abs(this.y - slime.y);
+
+            if (d < 100) {
+                if (
+                    newx + this.width > slime.x &&
+                    newx < slime.x + slime.width &&
+                    newy + this.height > slime.y &&
+                    newy < slime.y + slime.height) {
+
+                    game.player.health -= 5;
+                    game.player.health = max(0, game.player.health);
+                    game.animator.hitEffect();
+                    break;
+                }
+            }
+        }
+
+        // rat
+        for (let i = 0; i < game.rats.length; i++) {
+            let rat = game.rats[i];
+
+            let d = abs(this.x - rat.x) + abs(this.y - rat.y);
+
+            if (d < 100) {
+                if (
+                    newx + this.width > rat.x &&
+                    newx < rat.x + rat.width &&
+                    newy + this.height > rat.y &&
+                    newy < rat.y + rat.height) {
+
+                    game.player.health -= 5;
+                    game.player.health = max(0, game.player.health);
+
+                    game.animator.hitEffect();
+                    break;
                 }
             }
         }

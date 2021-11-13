@@ -10,6 +10,7 @@ class Game {
     constructor() {
         this.camera_still = false;    // used for parallax algorithm
 
+        this.HUD = new HUD();
         this.parallax = new Parallax();
         this.animator = new Animator();
 
@@ -22,6 +23,7 @@ class Game {
 
     loadTilemap(tm) {
         this.blocks = [];
+        this.spikes = [];
         this.slimes = [];
         this.bats = [];
         this.rats = [];
@@ -55,7 +57,7 @@ class Game {
                         break;
                     }
                     case 't': {
-                        this.blocks.push(new Block(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, sprites.spike));
+                        this.spikes.push(new Block(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, sprites.spike));
                         break;
                     }
 
@@ -94,10 +96,11 @@ class Game {
             this.translate_x = -this.level_width + width;
             this.camera_still = true;
         }
-        
+
         this.parallax.draw();
 
         translate(this.translate_x, 0);
+
 
         //drawHills
         //game.mainMenu.hill.draw();
@@ -117,19 +120,15 @@ class Game {
         for (let i = 0; i < game.rats.length; i++) {
             let rat = game.rats[i];
             rat.draw(); 
-            
-            if (rat.x < -rat.width) {
-                rat.x = width + rat.width;
-            }
-
-            if (rat.x >= width + rat.width) {
-                rat.x = -rat.width/2;
-            }
         }
 
         // draw entities
         for (let i = 0; i < this.blocks.length; i++) {
             this.blocks[i].draw();
+        }
+
+        for (let i = 0; i < this.spikes.length; i++) {
+            this.spikes[i].draw();
         }
 
         // draw slimes
@@ -151,6 +150,9 @@ class Game {
 
         this.player.update();
         this.player.draw();
+
+        translate(-this.translate_x, 0);
+        this.HUD.draw();
     }
 }
 
@@ -188,7 +190,7 @@ var intro_tilemap = [
     "g          ggg           ggg                             g",
     "g                                                        g",
     "g                                                        g",
-    "g                         r                              g",
+    "g                                                        g",
     "g                 ggggggggggggggg                        g",
     "g                                                        g",
     "g                                   ggggg    ggg         g",
@@ -196,5 +198,5 @@ var intro_tilemap = [
     "g            ggg                        g    g           g",
     "g       ggg                             g    g           g",
     "g                     g     s           g    g           g",
-    "g p                                                      g",
+    "g p    r                                                 g",
     "gggggggggggggttttggggggggggggggggggggggggggggggggggggggggg"];
