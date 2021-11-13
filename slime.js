@@ -8,12 +8,13 @@ function hasCollided(x1, y1, x2, y2, width1, height1, width2, height2) {
 class Slime {
 
     constructor(x, y, w, h) {
+        //Slime position and size
         this.x = x;
         this.y = y;
         this.width = w;
         this.height = h;
 
-        // constants
+        // constants for jumping and speed
         this.aggro_range = 100;
         this.jumps = 0;
         this.max_jumps = 1;
@@ -21,6 +22,7 @@ class Slime {
         this.xspd = 3;
         this.yacc = .3
 
+        //velocity vars
         this.yvel = 0;
         this.xvel = 0;
 
@@ -28,24 +30,25 @@ class Slime {
         this.invincibility = 0.5;
         this.invincibilityFrame = 0;
 
-        //gameplay vars
+        //gameplay variables
         this.anim_counter = 0;
-        this.dead = false;
-        this.hurt = false;
-        this.anim_counter_hurt = 0;
-        this.anim_counter_dead = 0;
-        this.lives = 5;
+        this.dead = false; //death flag
+        this.hurt = false; //for when to animate being damaged
+        this.anim_counter_hurt = 0; //For which to animate in the hurt animations array
+        this.anim_counter_dead = 0; //For which to animate in the dead animations array
+        this.lives = 5;//amount of hits enemy can take. 
 
         this.animation_state = 0; // 0: idle, 1: squished, 2: tall
-        this.anim_counter_hurt = 0;
-        this.anim_counter_dead = 0;
+        this.anim_counter_hurt = 0; //animation counter for hurt
+        this.anim_counter_dead = 0; //animation counter for dead
         this.anim_speed = 60 / 10; // frames per second
         this.anim_speed_hurt = 60 / 2; // frames per second
         this.anim_speed_dead = 60 / 10; // frames per second
-        this.lives = 2;
-        this.anim_counter = 0;
+        this.lives = 2; //amount of hits enemy can take. 
+        this.anim_counter = 0; //animation counter for moving
     }
 
+    //State machine of slime
     FSM() {
         let dist = abs(this.x - game.player.x) + abs(this.y - game.player.y);
 
@@ -55,16 +58,11 @@ class Slime {
         }
     }
 
+    //Returns the correct sprite for the animation state. 
     getSprite() {
         switch (this.animation_state) {
             case 0: return sprites.slime_idle; //idle
-            case 1: { //hurt
-                // if (!(frameCount % this.anim_speed_hurt)) {
-                //     this.anim_counter_hurt++;
-                //     this.anim_counter_hurt %= 1;
-                //     if (this.anim_counter_hurt === 0)
-                //         this.hurt = false;
-                // }
+            case 1: {
                 if (!(frameCount % this.anim_speed_hurt))
                     this.hurt = false;
                 return sprites.slime_hurt;
@@ -87,8 +85,9 @@ class Slime {
         return null;
     }
 
+    //Check if Rat has been hit by the sword.
     checkSwordCollision() {
-        if (game.player.lastDir === 'left') {
+        if (game.player.lastDir === 'left') { //if player is facing left
             if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX - 2.5 * game.player.width, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
                 this.invincibilityFrame = frameCount;
                 this.lives--;
@@ -98,7 +97,7 @@ class Slime {
                     this.dead = true;
                 }
             }
-        } else {
+        } else { //if player is facing right
             if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
                 this.invincibilityFrame = frameCount;
                 this.lives--;
@@ -111,6 +110,7 @@ class Slime {
         }
     }
 
+    //Updates slime movement, collision, lives, and animations. 
     update() {
 
         /* Insert AI logic here */
@@ -188,6 +188,7 @@ class Slime {
         }
     }
 
+    //Draws the slime. 
     draw() {
         this.update();
 

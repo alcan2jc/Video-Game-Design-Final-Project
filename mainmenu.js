@@ -1,3 +1,4 @@
+//collision function
 function withinBounds(x1, y1, x2, y2, width1, height1, width2, height2) {
     return (x1 + width1 > x2 &&
         x1 < x2 + width2 &&
@@ -5,12 +6,14 @@ function withinBounds(x1, y1, x2, y2, width1, height1, width2, height2) {
         y1 < y2 + height2);
 }
 
+//Cloud class that gets drawn near the top
 class Cloud {
     constructor(x, y) {
         this.x = x; //xcoord
         this.y = y; //ycoord
     }
 
+    //draws the clouds
     draw() {
         fill(250)
         noStroke();
@@ -28,6 +31,7 @@ class Cloud {
 
 }
 
+//Hill class that gets drawn at the base. Code taken from lecture code. 
 class Hill {
     constructor(x, y) {
         this.x = x; //xcoord
@@ -35,6 +39,7 @@ class Hill {
         this.ridges = [];
     }
 
+    //Draws hills
     draw() {
         fill(50, 205, 50);
 
@@ -78,6 +83,7 @@ class Hill {
     }
 }
 
+//main menu class. Draws hills, clouds, titles, and names. 
 class mainMenu {
     constructor() {
         this.titlesize = 40;
@@ -90,6 +96,7 @@ class mainMenu {
         this.hill = new Hill(width / 2, height / 1.1);
     }
 
+    //draws the sprites, hills, and clouds. Also containts logic for pressing buttons. 
     drawMainMenu() {
 
         //background
@@ -129,7 +136,7 @@ class mainMenu {
                 fill('orange')
                 rect(buttonX, buttonY, boxWidth, boxHeight);
 
-                //If selected
+                //Button selection
                 if (mouseIsPressed) {
                     if (i === 0) {
                         game.loadTilemap(intro_tilemap);

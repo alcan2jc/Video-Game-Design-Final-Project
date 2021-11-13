@@ -1,8 +1,10 @@
 
+//HUD class for player health. 
 class HUD {
     constructor() {
     }
 
+    //draws HUD
     draw() {
         // player health
         fill(255, 0, 0);
