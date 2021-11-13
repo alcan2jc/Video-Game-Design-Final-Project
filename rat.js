@@ -1,5 +1,11 @@
-class Rat {
+function hasCollided(x1, y1, x2, y2, width1, height1, width2, height2) {
+    return (x1 + width1 > x2 &&
+        x1 < x2 + width2 &&
+        y1 + height1 > y2 &&
+        y1 < y2 + height2);
+}
 
+class Rat {
     constructor(x, y, w, h) {
         this.x = x;
         this.y = y;
@@ -13,18 +19,29 @@ class Rat {
         this.xspd = 2;
 
         //moving variable. 0 = idle, 1 = left, 2 = right. 
-        this.move = 0;
+        this.move = 2;
 
-        //life
-        this.dead = 0;
+        //game vars
+        this.dead = false;
+        this.hurt = false;
+        this.anim_counter_hurt = 0;
+        this.anim_counter_dead = 0;
+        this.lives = 5;
+        //Invicibility frames after getting hit.
+        this.invincibility = 0.5;
+        this.invincibilityFrame = 0;
 
         this.vel = new p5.Vector(0, 0);
         this.acc = new p5.Vector(0, 0);
 
         // 0: idle 1: running 2: airborn
-        this.animation_state = 1;
+        this.animation_state = 0;
         this.anim_counter = 0;
+        this.anim_counter_hurt = 0;
+        this.anim_counter_dead = 0;
         this.anim_speed = 60 / 10; // frames per second
+        this.anim_speed_hurt = 60 / 5; // frames per second
+        this.anim_speed_dead = 60 / 10; // frames per second
     }
 
     wallCollision() {
@@ -91,14 +108,27 @@ class Rat {
                 }
                 return sprites.rat_run[this.anim_counter];
             }
-            case 2: return sprites.rat_hurt;
+            //hurt
+            case 2: {
+                if (!(frameCount % this.anim_speed_hurt)) {
+                    this.anim_counter_hurt++;
+                    this.anim_counter_hurt %= 2;
+                    if (this.anim_counter_hurt === 0)
+                        this.hurt = false;
+                }
+                return sprites.rat_hurt[this.anim_counter_hurt];
+            }
 
             case 3: {
-                if (!(frameCount % this.anim_speed)) {
-                    this.anim_counter++;
-                    this.anim_counter %= 4;
+                if (!(frameCount % this.anim_speed_dead)) {
+                    this.anim_counter_dead++;
+                    this.anim_counter_dead %= 4;
+                    if (this.anim_counter_dead === 0) {
+                        this.x = -100;
+                        this.y = -100;
+                    }
                 }
-                return sprites.rat_dead[this.anim_counter];
+                return sprites.rat_dead[this.anim_counter_dead];
             }
 
             default:
@@ -106,6 +136,45 @@ class Rat {
         }
 
         return null;
+    }
+
+    checkSwordCollision() {
+        if (game.player.lastDir === 'left') {
+            if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX - 2.5 * game.player.width, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
+                this.invincibilityFrame = frameCount;
+                this.lives--;
+            }
+        } else {
+            if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
+                this.invincibilityFrame = frameCount;
+                this.lives--;
+            }
+        }
+    }
+
+    checkSwordCollision() {
+        if (game.player.lastDir === 'left') {
+            if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX - 2.5 * game.player.width, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
+                this.invincibilityFrame = frameCount;
+                this.lives--;
+                if (this.lives > 0) {
+                    this.hurt = true;
+                } else {
+                    this.dead = true;
+                }
+
+            }
+        } else {
+            if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
+                this.invincibilityFrame = frameCount;
+                this.lives--;
+                if (this.lives > 0) {
+                    this.hurt = true;
+                } else {
+                    this.dead = true;
+                }
+            }
+        }
     }
 
     update() {
@@ -122,23 +191,30 @@ class Rat {
             this.checkSwordCollision();
         }
 
-        let newpos = this.wallCollision();
+        if (this.hurt || this.dead) {
+            if (this.hurt) {
+                this.animation_state = 2;
+            }
 
-        if (this.vel.x == 0) {
-            this.animation_state = 0;
+            if (this.dead) {
+                this.animation_state = 3;
+            }
         } else {
-            this.animation_state = 1;
+            if (this.vel.x == 0) {
+                this.animation_state = 0;
+            } else {
+                this.animation_state = 1;
+            }
         }
+
+        let newpos = this.wallCollision();
 
         this.x = newpos[0];
         this.y = newpos[1];
     }
 
-    checkSwordCollision() {
-        
-    }
-
     draw() {
+        this.update();
         if (this.vel.x < 0) {
             push();
             scale(-1, 1);

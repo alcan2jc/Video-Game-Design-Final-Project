@@ -142,7 +142,6 @@ class Game {
 
         // draw rats
         for (let i = 0; i < this.rats.length; i++) {
-            this.rats[i].update();
             this.rats[i].draw();
         }
 
@@ -170,5 +169,5 @@ var intro_tilemap = [
     "             ggg                        g    g            ",
     "        ggg                             g    g            ",
     "                      g     s           g    g            ",
-    "  p                                                       ",
+    "  p     r                                                 ",
     "gggggggggggggttttggggggggggggggggggggggggggggggggggggggggg"];

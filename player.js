@@ -1,6 +1,5 @@
 
 class Player {
-
     constructor(x, y, w, h) {
         this.x = x;
         this.y = y;
@@ -23,6 +22,7 @@ class Player {
         this.swordFrameCount = 0;
         this.swinging = false;
         this.lastDir = 'right';
+        this.sword_anim_counter = 0;
 
         this.has_dash = true;
         this.is_dashing = false;
@@ -152,13 +152,12 @@ class Player {
 
     getSwordSprite() {
         if (!(frameCount % this.anim_speed_sword)) {
-            this.anim_counter++;
-            this.anim_counter %= 3;
-            print(this.anim_counter);
-            if (this.anim_counter === 0)
+            this.sword_anim_counter++;
+            this.sword_anim_counter %= 3;
+            if (this.sword_anim_counter === 0)
                 this.swinging = false;
         }
-        return sprites.sword[this.anim_counter];
+        return sprites.sword[this.sword_anim_counter];
     }
     jump() {
         this.vel.y = this.jmp_spd;
@@ -205,7 +204,7 @@ class Player {
         if (this.swinging) {
             this.drawSword();
         } else {
-            this.anim_counter = 0;
+            this.sword_anim_counter = 0;
         }
 
         if (mouseIsPressed) {
@@ -215,7 +214,7 @@ class Player {
             }
         }
         
-        if ((mouseIsPressed) && this.has_dash && this.x_dir) {
+        if (keyCode === 32 && this.has_dash && this.x_dir) {
             this.dash_timer = this.dash_length;
             this.has_dash = false;
             this.is_dashing = true;
@@ -266,17 +265,11 @@ class Player {
         //slashing
         if (this.lastDir === 'left') {
             push();
-            noFill();
-            stroke('red');
-            scale(-1, 1);
-
-            ellipse(-(this.x - this.offsetX) - this.width + 70, this.y + 10, this.swordWidth * 0.9, this.swordHeight/5);
+            scale(-1, 1);   
             image(this.getSwordSprite(), -(this.x - this.offsetX) - this.width, this.y - this.offsetY, this.swordWidth, this.swordHeight);
             pop();
         } else {
             noFill();
-            stroke('red');
-            ellipse(this.x - this.offsetX + 35, this.y + 10, this.swordWidth * 0.9, this.swordHeight/5);
             image(this.getSwordSprite(), this.x + this.offsetX, this.y - this.offsetY, this.swordWidth, this.swordHeight);
         }
     }

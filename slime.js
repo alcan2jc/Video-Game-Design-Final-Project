@@ -1,3 +1,9 @@
+function hasCollided(x1, y1, x2, y2, width1, height1, width2, height2) {
+    return (x1 + width1 > x2 &&
+        x1 < x2 + width2 &&
+        y1 + height1 > y2 &&
+        y1 < y2 + height2);
+}
 
 class Slime {
 
@@ -17,6 +23,13 @@ class Slime {
 
         this.yvel = 0;
         this.xvel = 0;
+
+        //Invicibility frames after getting hit.
+        this.invincibility = 0.5;
+        this.invincibilityFrame = 0;
+
+        //gameplay vars
+        this.lives = 2;
 
         this.jump_state = 0; // 0: idle, 1: squished, 2: tall
     }
@@ -42,6 +55,20 @@ class Slime {
         return null;
     }
 
+    checkSwordCollision() {
+        if (game.player.lastDir === 'left') {
+            if ((frameCount - this.invincibilityFrame) > this.invincibility*60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX - 2.5*game.player.width, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight/5)) {
+                this.invincibilityFrame = frameCount;
+                this.lives--;
+            }
+        } else {
+            if ((frameCount - this.invincibilityFrame) > this.invincibility*60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight/5)) {
+                this.invincibilityFrame = frameCount;
+                this.lives--;
+            }
+        }
+    }
+    
     update() {
           
         /* Insert AI logic here */
@@ -101,8 +128,15 @@ class Slime {
         this.x = newx;
         this.y = newy;
 
-    }
+        //Only check sword collision when player is swinging.
+        if (game.player.swinging) {
+            this.checkSwordCollision();
+        }
 
+        if (this.lives === 0) {
+            this.anim_counter = 1;
+        }
+    }
 
     draw() {
         this.update();
