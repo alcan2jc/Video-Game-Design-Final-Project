@@ -54,7 +54,7 @@ class Rat {
 
             let d = abs(this.x - block.x) + abs(this.y - block.y);
 
-            if (d < 50) {
+            if (d < 100) {
 
                 if (
                     newx + this.width > block.x &&
@@ -76,7 +76,7 @@ class Rat {
 
             let d = abs(this.x - block.x) + abs(this.y - block.y);
 
-            if (d < 50) {
+            if (d < 100) {
                 if (
                     newx + this.width > block.x &&
                     newx < block.x + block.width &&
