@@ -42,6 +42,8 @@ class Slime {
         this.anim_speed = 60 / 10; // frames per second
         this.anim_speed_hurt = 60 / 2; // frames per second
         this.anim_speed_dead = 60 / 10; // frames per second
+        this.lives = 2;
+        this.anim_counter = 0;
     }
 
     FSM() {

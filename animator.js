@@ -2,6 +2,9 @@ class Animator {
     constructor() {
       this.timer = 0;
       this.anim = [];
+
+      this.hit_cd = 0;
+      this.hit_len = 100;
     }
     
     draw() {
@@ -14,6 +17,8 @@ class Animator {
           i--;
         }
       }
+
+      this.hit_cd--;
     }
 
     jumpEffect(x, y) {
@@ -21,7 +26,10 @@ class Animator {
     }
     
     hitEffect() {
-      this.anim.push(new hit_a());
+      if (this.hit_cd < 0) {
+        this.anim.push(new hit_a());
+        this.hit_cd = this.hit_len;
+      }
     }
     
     collectEffect(x, y) {
@@ -79,6 +87,17 @@ class Animator {
     }
   
     draw() {
+
+      fill(255, 0, 0, this.alpha);
+      rect(0, 0, game.level_width, height);
+
+      this.alpha -= 5;
+
+      if (this.alpha < 0)
+        this.end = true;
+      
+
+      /*
       push()
       if (game.player.x >= width / 2 && game.player.x <= (3/2) * width)
         translate(game.player.x - (width/2), 0);
@@ -94,7 +113,9 @@ class Animator {
         this.end = true;
       
       pop();
+      */
     }
+    
   }
   
   class collect_money {

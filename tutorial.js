@@ -20,7 +20,7 @@ class Page {
             text("Gameplay", width / 2, height / 4);
             textStyle(NORMAL);
             text("Kill enemies by hitting them with your sword enough times", width / 2, height / 3.2);
-            text("Touching enemies will make you lose health.", width / 2, height / 2.7);
+            text("Touching enemies will make you lose health.", width / 2, height / 2.6);
             text("Your health bar is at the top left", width / 2, height / 2.2);
         } else if (this.page === 2) {
             text("Coming Soon 2", width / 2, height / 2);
