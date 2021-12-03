@@ -33,7 +33,11 @@ class Player {
         this.max_xspd = 5;
         this.friction = 0.9;
         this.health = 100;
-
+        //Invicibility frames after getting hit.
+        this.invincibility = 1;
+        this.invincibilityFrame = 0;
+        this.flashFrame = 0;
+        this.flashState = 0;
         this.forces = new p5.Vector(0, 0);
 
         this.xacc = new p5.Vector(.75, 0);
@@ -87,9 +91,9 @@ class Player {
                         newx < block.x + block.width &&
                         this.y + this.height > block.y &&
                         this.y < block.y + block.height) {
-                        
+
                         this.touching_wall_x = true;
-                        
+
                         this.vel.x = 0;
                         newx = this.x;
                         break;
@@ -113,7 +117,7 @@ class Player {
                         newx < block.x + block.width &&
                         newy + this.height > block.y &&
                         newy < block.y + block.height) {
-                        
+
                         this.touching_wall_y = true;
 
                         if (this.vel.y > 0) {
@@ -141,7 +145,7 @@ class Player {
                     newx < block.x + block.width &&
                     newy + this.height > block.y &&
                     newy < block.y + block.height) {
-                    
+
                     this.touching_wall_y = true;
 
                     if (this.vel.y > 0) {
@@ -152,8 +156,13 @@ class Player {
                     this.vel.y = 0;
                     newy = this.y;
 
-                    game.player.health = max(0, --game.player.health);
-                    game.animator.hitEffect();
+                    if ((frameCount - this.invincibilityFrame) > this.invincibility * 60) {
+                        this.invincibilityFrame = frameCount;
+                        this.vel.y -= 5;
+                        game.player.health -= 5;
+                        game.player.health = max(0, game.player.health);
+                        game.animator.hitEffect();
+                    }
                     break;
                 }
             }
@@ -172,9 +181,18 @@ class Player {
                     newy + this.height > slime.y &&
                     newy < slime.y + slime.height) {
 
-                    game.player.health -= 5;
-                    game.player.health = max(0, game.player.health);
-                    game.animator.hitEffect();
+                    if ((frameCount - this.invincibilityFrame) > this.invincibility * 60) {
+                        this.invincibilityFrame = frameCount;
+                        if (this.lastDir === 'left') {
+                            this.vel.x += 10;
+                        } else {
+                            this.vel.x -= 10;
+                        }
+                        this.vel.y -= 5;
+                        game.player.health -= 5;
+                        game.player.health = max(0, game.player.health);
+                        game.animator.hitEffect();
+                    }
                     break;
                 }
             }
@@ -193,10 +211,48 @@ class Player {
                     newy + this.height > rat.y &&
                     newy < rat.y + rat.height) {
 
-                    game.player.health -= 5;
-                    game.player.health = max(0, game.player.health);
+                    if ((frameCount - this.invincibilityFrame) > this.invincibility * 60) {
+                        this.invincibilityFrame = frameCount;
+                        if (this.lastDir === 'left') {
+                            this.vel.x += 10;
+                        } else {
+                            this.vel.x -= 10;
+                        }
+                        this.vel.y -= 5;
+                        game.player.health -= 5;
+                        game.player.health = max(0, game.player.health);
+                        game.animator.hitEffect();
+                    }
+                    break;
+                }
+            }
+        }
 
-                    game.animator.hitEffect();
+        // golem
+        for (let i = 0; i < game.golems.length; i++) {
+            let golem = game.golems[i];
+
+            let d = abs(this.x - golem.x) + abs(this.y - golem.y);
+
+            if (d < 300) {
+                if (
+                    newx + this.width > golem.x + 40 &&
+                    newx < golem.x + 40 + golem.width - 80 &&
+                    newy + this.height > golem.y + 20 &&
+                    newy < golem.y + 20 + golem.height - 30) {
+
+                    if ((frameCount - this.invincibilityFrame) > this.invincibility * 60) {
+                        this.invincibilityFrame = frameCount;
+                        if (this.lastDir === 'left') {
+                            this.vel.x += 10;
+                        } else {
+                            this.vel.x -= 10;
+                        }
+                        this.vel.y -= 5;
+                        game.player.health -= 5;
+                        game.player.health = max(0, game.player.health);
+                        game.animator.hitEffect();
+                    }
                     break;
                 }
             }
@@ -230,16 +286,16 @@ class Player {
         if (!(frameCount % this.anim_speed_sword)) {
             this.anim_counter_sword++;
             this.anim_counter_sword %= 3;
-            //print(this.anim_counter);
             if (this.anim_counter_sword === 0)
                 this.swinging = false;
         }
         return sprites.sword[this.anim_counter_sword];
     }
+
     jump() {
         this.vel.y = this.jmp_spd;
         this.jumps--;
-        game.animator.jumpEffect(this.x + this.width/2, this.y + this.height);
+        game.animator.jumpEffect(this.x + this.width / 2, this.y + this.height);
     }
 
     wall_jump() {
@@ -288,7 +344,7 @@ class Player {
                 this.swinging = true;
             }
         }
-        
+
         if (keyIsDown(SHIFT) && this.has_dash && this.x_dir) {
             this.dash_timer = this.dash_length;
             this.has_dash = false;
@@ -324,7 +380,6 @@ class Player {
         this.y = newpos[1];
     }
 
-
     draw() {
         if (this.x_dir == -1) {
             push();
@@ -340,7 +395,7 @@ class Player {
         //slashing
         if (this.lastDir === 'left') {
             push();
-            scale(-1, 1);   
+            scale(-1, 1);
             image(this.getSwordSprite(), -(this.x - this.offsetX) - this.width, this.y - this.offsetY, this.swordWidth, this.swordHeight);
             pop();
         } else {

@@ -8,7 +8,7 @@ class Animator {
       this.anim = [];
 
       this.hit_cd = 0;
-      this.hit_len = 100;
+      this.hit_len = 60;
     }
     
     draw() {

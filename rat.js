@@ -29,7 +29,7 @@ class Rat {
         this.hurt = false; //for when to animate being damaged
         this.anim_counter_hurt = 0; //For which to animate in the hurt animations array
         this.anim_counter_dead = 0; //For which to animate in the dead animations array
-        this.lives = 5; //amount of hits enemy can take. 
+        this.lives = 1; //amount of hits enemy can take. 
         //Invicibility frames after getting hit.
         this.invincibility = 0.5;
         this.invincibilityFrame = 0;
@@ -43,7 +43,7 @@ class Rat {
         this.anim_counter_dead = 0; //animation counter for dead
         this.anim_speed = 60 / 10; // speed of running in frames per second
         this.anim_speed_hurt = 60 / 2; // speed of hurt animations in frames per second
-        this.anim_speed_dead = 60 / 10; // speed of dead animations in frames per second
+        this.anim_speed_dead = 60 / 60; // speed of dead animations in frames per second
     }
 
     //Checks rat to wall collision
@@ -126,7 +126,8 @@ class Rat {
             }
             
             //dead
-            case 3: { 
+            case 3: {
+                
                 if (!(frameCount % this.anim_speed_dead)) {
                     this.anim_counter_dead++;
                     this.anim_counter_dead %= 4;

@@ -4,6 +4,7 @@ var PLAYER_SIZE = 28;
 var SLIME_SIZE = 64;
 var BAT_SIZE = 64;
 var RAT_SIZE = 32;
+var GOLEM_SIZE = 128;
 var SPIKE_SIZE = 32;
 
 // game container class
@@ -33,6 +34,7 @@ class Game {
         this.slimes = [];
         this.bats = [];
         this.rats = [];
+        this.golems = [];
         this.player = null;
 
         this.level_width = tm[0].length * TILE_SIZE;
@@ -60,6 +62,10 @@ class Game {
                     }
                     case 'r': {
                         this.rats.push(new Rat(x * TILE_SIZE, y * TILE_SIZE, RAT_SIZE, RAT_SIZE));
+                        break;
+                    }
+                    case 'l': {
+                        this.golems.push(new Golem(x * TILE_SIZE, y * TILE_SIZE, GOLEM_SIZE, GOLEM_SIZE));
                         break;
                     }
                     case 't': {
@@ -97,11 +103,11 @@ class Game {
         this.translate_x = 0;
         this.camera_still = true;
 
-        if (this.player.x >= width / 2 && this.player.x <= this.level_width - (width/2)) {
-            this.translate_x = -this.player.x + (width/2);
+        if (this.player.x >= width / 2 && this.player.x <= this.level_width - (width / 2)) {
+            this.translate_x = -this.player.x + (width / 2);
             this.camera_still = false;
         }
-        else if (this.player.x > this.level_width - (width/2)) {
+        else if (this.player.x > this.level_width - (width / 2)) {
             this.translate_x = -this.level_width + width;
             this.camera_still = true;
         }
@@ -128,13 +134,25 @@ class Game {
         //rat
         for (let i = 0; i < game.rats.length; i++) {
             let rat = game.rats[i];
-            rat.draw(); 
+            rat.draw();
         }
 
         // draw entities
         for (let i = 0; i < this.blocks.length; i++) {
             this.blocks[i].draw();
+            // push();
+            // noFill();
+            // stroke('red');
+            // rect(block.x, block.y, block.width, block.height);
+            // pop();
         }
+
+        //golem
+        for (let i = 0; i < game.golems.length; i++) {
+            let golem = game.golems[i];
+            golem.draw();
+        }
+
 
         for (let i = 0; i < this.spikes.length; i++) {
             this.spikes[i].draw();
@@ -148,11 +166,6 @@ class Game {
         // draw bats
         for (let i = 0; i < this.bats.length; i++) {
             this.bats[i].draw();
-        }
-
-        // draw rats
-        for (let i = 0; i < this.rats.length; i++) {
-            this.rats[i].draw();
         }
 
         let rat = this.rats[0];
@@ -206,15 +219,15 @@ var intro_tilemap = [
     "g                        ggg                             g",
     "g                        ggg                             g",
     "g          ggg           ggg                             g",
-    "g                                                        g",
-    "g                                                        g",
+    "g     l                                                  g",
+    "g                                       bb               g",
     "g                                                        g",
     "g                 ggggggggggggggg                        g",
     "g                                                        g",
-    "g                                   ggggg    ggg         g",
+    "g                       l           ggggg    ggg         g",
     "g                                       g    g           g",
     "g            ggg                        g    g           g",
-    "g       ggg                             g    g           g",
+    "g                                       g    g           g",
     "g                     g     s           g    g           g",
-    "g p              r                                       g",
+    "gp               r                                       g",
     "gggggggggggggttttggggggggggggggggggggggggggggggggggggggggg"];
