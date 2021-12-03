@@ -27,8 +27,6 @@ class Rat {
         //game variables
         this.dead = false; //death flag
         this.hurt = false; //for when to animate being damaged
-        this.anim_counter_hurt = 0; //For which to animate in the hurt animations array
-        this.anim_counter_dead = 0; //For which to animate in the dead animations array
         this.lives = 1; //amount of hits enemy can take. 
         //Invicibility frames after getting hit.
         this.invincibility = 0.5;
@@ -59,7 +57,6 @@ class Rat {
 
             //only check collision if rat is close to that block
             if (d < 100) {
-
                 if (
                     newx + this.width > block.x &&
                     newx < block.x + block.width &&
@@ -157,7 +154,6 @@ class Rat {
                 } else {
                     this.dead = true;
                 }
-
             }
         } else { //if player is facing right
             if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {

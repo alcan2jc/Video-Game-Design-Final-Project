@@ -33,8 +33,8 @@ class Golem {
         this.lastDir = 'right';
         this.anim_counter_sword = 0;
 
-        //moving variable. 0 = idle, 1 = left, 2 = right 3 = jump, 4 = swing. 
-        this.move = 2;
+        //moving variable. 0 = idle, 1 = left, 2 = right, 3 = jump, 4 = swing. 
+        this.move = 0;
 
         //game variables
         this.dead = false; //death flag
@@ -71,7 +71,7 @@ class Golem {
         this.swing_range = 150; // range for golem to swing
         this.move_dir;  // varible that holdes the direction of movement
         this.wonder_timer = 999;  // timer used for wonder state
-        this.wonder_dir = (Math.random() < .5) ? -1: 1; // variable for wondering direction
+        this.wonder_dir = (Math.random() < .5) ? -1 : 1; // variable for wondering direction
     }
 
     //Checks Golem to wall collision
@@ -83,7 +83,6 @@ class Golem {
         for (let i = 0; i < game.blocks.length; i++) {
             let block = game.blocks[i];
             let d = abs(this.x - block.x) + abs(this.y - block.y);
-            // d = 0;
             //only check collision if goplem is close to that block
             if (d < 500) {
 
@@ -102,6 +101,46 @@ class Golem {
 
         for (let i = 0; i < game.blocks.length; i++) {
             let block = game.blocks[i];
+
+            let d = abs(this.x - block.x) + abs(this.y - block.y);
+            //only check collision if golem is close to that block
+            if (d < 500) {
+
+                if (hasCollided(
+                    this.x + 40, newy + 20, block.x, block.y,
+                    this.width - 80, this.height - 30, block.width, block.height)) {
+
+                    if (this.vel.y > 0) {
+                        this.jumps = this.max_jumps;
+                    }
+
+                    this.vel.y = 0;
+                    newy = this.y;
+                    break;
+                }
+            }
+        }
+
+        // spike collision
+        //x
+        for (let i = 0; i < game.spikes.length; i++) {
+            let block = game.spikes[i];
+            let d = abs(this.x - block.x) + abs(this.y - block.y);
+            //only check collision if goplem is close to that block
+            if (d < 500) {
+
+                if (hasCollided(
+                    newx + 40, this.y + 20, block.x, block.y,
+                    this.width - 80, this.height - 30, block.width, block.height)) {
+
+                    newx = this.x;
+                    break;
+                }
+            }
+        }
+
+        for (let i = 0; i < game.spikes.length; i++) {
+            let block = game.spikes[i];
 
             let d = abs(this.x - block.x) + abs(this.y - block.y);
             //only check collision if golem is close to that block
@@ -242,7 +281,7 @@ class Golem {
                 if ((this.wonder_timer > 120)) {
                     this.wonder_timer = 0;
                     let rand = Math.random();
-                    if (rand < .3) 
+                    if (rand < .3)
                         this.wonder_dir = -1;   // left
                     else if (rand > .7)
                         this.wonder_dir = 1;    // right
@@ -296,25 +335,21 @@ class Golem {
         this.forces.x = 0;
         this.forces.y = 0;
 
-        if ((frameCount - this.invincibilityFrame) <= this.invincibility * 60) {
-        }
-        if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
-            // this.forces.add(this.xacc_n);
-            this.move = 1;
-        }
-        else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
-            this.move = 2;
-        }
+        // if ((frameCount - this.invincibilityFrame) <= this.invincibility * 60) {
+        // }
+        // if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
+        //     // this.forces.add(this.xacc_n);
+        //     this.move = 1;
+        // }
+        // else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
+        //     this.move = 2;
+        // }
 
         this.vel.x = 0;
 
         this.GolemFSM();
 
-        if (mouseIsPressed) {
-            if (mouseButton === LEFT && (frameCount - this.swordFrameCount) > 60 * this.swordCooldown) {
-                this.move = 4;
-            }
-        }
+
 
         //Only check sword collision when player is swinging.
         if (game.player.swinging) {

@@ -20,9 +20,8 @@ class Game {
         this.parallax = new Parallax();
         this.animator = new Animator();
 
-        this.loadTilemap(mainmenu_tilemap);
-
         this.mainMenu = new mainMenu();
+        this.loadTilemap(mainmenu_tilemap);
         this.tutorial = new Tutorial();
         this.state = "main menu";
     }
@@ -118,7 +117,6 @@ class Game {
         push();
         translate(this.translate_x, 0);
 
-
         //drawHills
         // game.mainMenu.hill.draw();
 
@@ -126,11 +124,6 @@ class Game {
         for (let i = 0; i < game.bats.length; i++) {
             let bat = game.bats[i];
             bat.draw();
-            bat.x--;
-
-            if (bat.x < -bat.width) {
-                bat.x = width + bat.width;
-            }
         }
 
         //rat
@@ -170,14 +163,14 @@ class Game {
             this.bats[i].draw();
         }
 
-        let rat = this.rats[0];
-        if (rat.x < 560) {
-            rat.move = 2;
-        }
+        // let rat = this.rats[0];
+        // if (rat.x < 560) {
+        //     rat.move = 2;
+        // }
 
-        if (rat.x > 1750) {
-            rat.move = 1;
-        }
+        // if (rat.x > 1750) {
+        //     rat.move = 1;
+        // }
         this.animator.draw();
 
         this.player.update();
@@ -193,46 +186,46 @@ class Game {
 
 // tilemaps
 var mainmenu_tilemap = [
-    "                                  ",
-    "                             ",
-    "                             ",
-    "        ggggg                ",
-    "                             ",
-    "                         ggg ",
-    "                         ggg ",
-    "           ggg           ggg ",
-    "                             ",
-    "                             ",
-    "                             ",
-    "                  gggg  gg   ",
-    "                             ",
-    "                             ",
-    "                             ",
-    "                             ",
-    "        ggg                  ",
-    "                      g     s",
-    "  p                          ",
-    "gggggggggggggttttggggggggggggggggggg",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                                                          ",
+    "                            s                             ",
+    "  p                                                       ",
+    "gggggggggggggttttggggggggggggggggggggggggggggggggggggggggg",
 ];
 
 var intro_tilemap = [
-    "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
-    "g                                                        g",
-    "g                                                        g",
-    "g       ggggg                                            g",
-    "g                                               ggggg    g",
-    "g                        ggg                             g",
-    "g                        ggg                             g",
-    "g          ggg           ggg                             g",
-    "g     l                                                  g",
-    "g                                       bb               g",
-    "g                                                        g",
-    "g                 ggggggggggggggg                        g",
-    "g                                                        g",
-    "g                                   ggggg    ggg         g",
-    "g                                       g    g           g",
-    "g            ggg                        g    g           g",
-    "g                                       g    g           g",
-    "g                     g     s           g    g           g",
-    "gp               r                                       g",
-    "gggggggggggggttttggggggggggggggggggggggggggggggggggggggggg"];
+    "ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+    "g                                                                                             g",
+    "g                                                                                             g",
+    "g       ggggg                                                                                 g",
+    "g                                               ggggg                                         g",
+    "g                        ggg                                                                  g",
+    "g                        ggg                                                                  g",
+    "g          ggg           ggg                                                                  g",
+    "g                                                                                             g",
+    "g                                                                                             g",
+    "g                                                                                             g",
+    "g                 ggggggggggggggg                                                             g",
+    "g                                                                                             g",
+    "g                                   ggggg    ggg                          l                   g",
+    "g                                       g    g                                                g",
+    "g                                       g    g                                                g",
+    "g                                       g    g                                                g",
+    "g                                       g    g                                                g",
+    "g                                                                      p                      g",
+    "gggggggggggggttttgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg"];
