@@ -296,6 +296,11 @@ class Player {
                 }
             }
         }
+        if (newx < 0) {
+            newx = 0;
+        } else if (newx + this.width > game.level_width) {
+            newx = game.level_width - this.width;
+        }
 
         return [newx, newy];
     }

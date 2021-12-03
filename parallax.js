@@ -1,4 +1,10 @@
+
 var MOUTNAIN_WIDTH = 900;
+var TREE_WIDTH = 600;
+var TREE_HEIGHT = 500;
+
+var CLOUD_WIDTH = 1000;
+var CLOUD_HEIGHT =  200;
 
 // parallax effect for background motion
 class Parallax {
@@ -8,51 +14,56 @@ class Parallax {
     // setup background for each level
     // level_width, total lenght of the level in pixels
     setup_background(level_width) {
-        this.mnts = new background_mountain(0, 0, 0, level_width);
+        this.mnts = new background_layer(0, 0, level_width, MOUTNAIN_WIDTH, height, sprites.background, 0.2);
+        this.trees = new background_layer(200, -500, level_width, TREE_WIDTH, TREE_HEIGHT, sprites.trees, 0.3);
+        this.clouds = new background_layer(0, -1000, level_width, CLOUD_WIDTH, CLOUD_HEIGHT, sprites.clouds3, .4);
     }
 
     // updates the position of background images
     update() {
         this.mnts.update();
+        this.trees.update();
+        this.clouds.update();
     }
 
     // draws background images to canvsa
     draw() {
         this.update();
         this.mnts.draw();
+        this.trees.draw();
+        this.clouds.draw();
     }
 }
 
-// class for mountain background
-class background_mountain {
+// class for background categories
+class background_layer {
+    // xmin: minimum x position
+    // xmax: maximum x position in world
+    // y: y offset
+    constructor(y, xmin, xmax, img_width, img_height, sprite, speed) {
+        this.imgs = [];
 
-    // x position
-    // y position
-    // x min: minimum x position in game world
-    // x max: maximum x position in game worls
-    constructor(x, y, xmin, xmax) {
-        this.mountains = [];
-
-        let xcurr = xmin - MOUTNAIN_WIDTH/2;
-        while (xcurr + MOUTNAIN_WIDTH < xmax) {
-            this.mountains.push(new background_image(xcurr, 0, MOUTNAIN_WIDTH, height, sprites.background, 0.2));
-            xcurr += MOUTNAIN_WIDTH;
+        let xcurr = xmin - img_width/2;
+        while (xcurr + img_width < xmax) {
+            this.imgs.push(new background_image(xcurr, y, img_width, img_height, sprite, speed));
+            xcurr += img_width;
         }
     }
 
     // updates image positions
-    update() {
-        for (let i = 0; i < this.mountains.length; i++) {
-            this.mountains[i].update();
+     update() {
+        for (let i = 0; i < this.imgs.length; i++) {
+            this.imgs[i].update();
         }
     }
 
     // draws images to canvas
     draw() {
-        for (let i = 0; i < this.mountains.length; i++) {
-            this.mountains[i].draw();
+        for (let i = 0; i < this.imgs.length; i++) {
+            this.imgs[i].draw();
         }
     }
+
 }
 
 // generic container background image class
