@@ -103,7 +103,8 @@ class Sprites {
         this.spike = loadImage('sprites/spike.png');
         this.background = loadImage('sprites/MountainBackground.png');
         this.trees = loadImage('sprites/trees.png');
-        this.clouds = loadImage('sprites/Clouds2.png');
+        this.clouds2 = loadImage('sprites/Clouds2.png');
+        this.clouds3 = loadImage('sprites/Clouds3.png');
 
         // shuriken
         this.shuriken = loadImage('sprites/Shuriken.png');

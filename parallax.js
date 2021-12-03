@@ -16,7 +16,7 @@ class Parallax {
     setup_background(level_width) {
         this.mnts = new background_layer(0, 0, level_width, MOUTNAIN_WIDTH, height, sprites.background, 0.2);
         this.trees = new background_layer(200, -500, level_width, TREE_WIDTH, TREE_HEIGHT, sprites.trees, 0.3);
-        this.clouds = new background_layer(0, -1000, level_width, CLOUD_WIDTH, CLOUD_HEIGHT, sprites.clouds, .4);
+        this.clouds = new background_layer(0, -1000, level_width, CLOUD_WIDTH, CLOUD_HEIGHT, sprites.clouds3, .4);
     }
 
     // updates the position of background images
