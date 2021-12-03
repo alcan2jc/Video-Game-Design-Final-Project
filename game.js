@@ -15,6 +15,7 @@ class Game {
     constructor() {
         this.camera_still = false;    // used for parallax algorithm
 
+        this.snow = new Snow();
         this.HUD = new HUD();
         this.parallax = new Parallax();
         this.animator = new Animator();
@@ -114,6 +115,7 @@ class Game {
 
         this.parallax.draw();
 
+        push();
         translate(this.translate_x, 0);
 
 
@@ -181,7 +183,10 @@ class Game {
         this.player.update();
         this.player.draw();
 
-        translate(-this.translate_x, 0);
+        //translate(-this.translate_x, 0);
+        pop();
+        this.snow.draw();
+
         this.HUD.draw();
     }
 }
