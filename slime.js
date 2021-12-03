@@ -42,10 +42,22 @@ class Slime {
         this.jump_state = 0; //0: idle, 1: about to jump, 2: jumped
         this.jump_state_timer_max = 120;    // number of frames slime must wind up before jumping
         this.jump_state_timer_wait = 60;   // number of frames slime must wait after jumping
+
+        this.dead_timer_max = 90;   // how long the slime remains dead until it dissappears
+        this.dead_timer = 0;    // timer used when slime dies
     }
 
     //State machine of slime
     FSM() {
+
+        if (this.dead == true) {
+            this.dead_timer++;
+            if (this.dead_timer > this.dead_timer_max) {
+                delete this.x;
+            }
+
+            return;
+        }
 
         switch (this.jump_state) {
             case 0: {

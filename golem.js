@@ -239,8 +239,6 @@ class Golem {
                 // wonder
                 this.wonder_timer++;
 
-                print('wondering');
-
                 if ((this.wonder_timer > 120)) {
                     this.wonder_timer = 0;
                     let rand = Math.random();
