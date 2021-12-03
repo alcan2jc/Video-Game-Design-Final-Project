@@ -2,34 +2,86 @@
 class Page {
     constructor(page) {
         this.page = page;
+        this.played = false;
+        this.vid;
     }
 
     //Draws the pages based on the current page. 
     drawPage() {
         if (this.page === 0) {
+            if (!this.played) {
+                this.vid = createVideo('vid/movement.mp4');
+                this.vid.hide();
+                this.vid.autoplay();
+                this.vid.loop();
+                this.vid.volume(0);
+                this.played = true;
+            }
+            image(this.vid, 0, 0, width, height);
             textStyle(BOLD);
             text("Movement", width / 2, height / 4.1);
             textStyle(NORMAL);
             text("Press D to move right", width / 2, height / 3.2);
             text("Press A to move left", width / 2, height / 2.6);
             text("Press W to jump", width / 2, height / 2.15);
-            text("Press MB1 to swing sword", width / 2, height / 1.8);
-            text("Move towards awall and jump (W) while touching the wall", width / 2, height / 1.5);
-            text("to perform a wall jump", width / 2, height / 1.3);
             
         } else if (this.page === 1) {
-            textStyle(BOLD);
-            text("Gameplay", width / 2, height / 4);
-            textStyle(NORMAL);
-            text("Kill enemies by hitting them with your sword enough times", width / 2, height / 3.2);
-            text("Touching enemies will make you lose health.", width / 2, height / 2.6);
-            text("Your health bar is at the top left", width / 2, height / 2.2);
+            if (!this.played) {
+                this.vid = createVideo('vid/swing.mp4');
+                this.vid.hide();
+                this.vid.autoplay();
+                this.vid.loop();
+                this.vid.volume(0);
+                this.played = true;
+            }
+            image(this.vid, 0, 0, width, height);
+            text("Press MB1 to swing sword", width / 2, height / 4.1);
         } else if (this.page === 2) {
-            text("Coming Soon 2", width / 2, height / 2);
+            if (!this.played) {
+                this.vid = createVideo('vid/wall_jump.mp4');
+                this.vid.hide();
+                this.vid.autoplay();
+                this.vid.loop();
+                this.vid.volume(0);
+                this.played = true;
+            }
+            image(this.vid, 0, 0, width, height);
+            text("Jump (W) towards a wall and jump again while touching the wall", width / 2, height / 4.1);
+            text("to perform a wall jump", width / 2, height / 3.3);
         } else if (this.page === 3) {
-            text("Coming Soon 3", width / 2, height / 2);
+            if (!this.played) {
+                this.vid = createVideo('vid/dash.mp4');
+                this.vid.hide();
+                this.vid.autoplay();
+                this.vid.loop();
+                this.vid.volume(0);
+                this.played = true;
+            }
+            image(this.vid, 0, 0, width, height);
+            text("Press shift to dash", width / 2, height / 4.1);
         } else if (this.page === 4) {
-            text("Coming Soon 4", width / 2, height / 2);
+            if (!this.played) {
+                this.vid = createVideo('vid/swing.mp4');
+                this.vid.hide();
+                this.vid.autoplay();
+                this.vid.loop();
+                this.vid.volume(0);
+                this.played = true;
+            }
+            image(this.vid, 0, 0, width, height);
+            text("Kill enemies by hitting them with your sword enough times", width / 2, height / 4.1);
+        } else if (this.page === 5) {
+            if (!this.played) {
+                this.vid = createVideo('vid/hurt.mp4');
+                this.vid.hide();
+                this.vid.autoplay();
+                this.vid.loop();
+                this.vid.volume(0);
+                this.played = true;
+            }
+            image(this.vid, 0, 0, width, height);
+            text("Touching enemies will make you lose health.", width / 2, height / 4.1);
+            text("Your health bar is at the top left", width / 2, height / 3.3);
         }
     }
 }
@@ -41,7 +93,7 @@ class Tutorial {
         this.buttonHeight = 50;
         this.page = 0;
         this.pages = [];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 6; i++) {
             this.pages.push(new Page(i));
         }
         this.pressedFlag = false;
@@ -53,9 +105,10 @@ class Tutorial {
         if (withinBounds(mouseX, mouseY, x, y, 1, 1, this.buttonWidth, this.buttonHeight)) {
             fill('orange')
             rect(x, y, this.buttonWidth, this.buttonHeight);
-            
+
             if (mouseIsPressed && frameCount - this.prevFrameCount > 30) {
                 this.prevFrameCount = frameCount;
+                // this.pages[this.page].played = false;
                 if (label === "BACK") {
                     if (this.page === 0) {
                         game.state = "main menu";
@@ -77,7 +130,7 @@ class Tutorial {
 
     //Draws the background, text, and buttons. 
     drawTutorial() {
-        image(sprites.background, 0, 0, width, height);
+        // image(sprites.background, 0, 0, width, height);
 
         textSize(30);
         fill("yellow");

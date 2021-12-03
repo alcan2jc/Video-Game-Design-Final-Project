@@ -55,7 +55,7 @@ class Hill {
             let ridge = [];
             for (let j = 0; j <= intervals; ++j) {
                 var n = noise(a);
-                ridge.push(map(n, 0, 1, height / 2, height - (i * rangeDiff - 200)));
+                ridge.push(map(n, 0, 1, height / 2, height - (i * rangeDiff - 250)));
                 a += ruggedness;
             }
             this.ridges.push(ridge);
@@ -99,7 +99,7 @@ class mainMenu {
     //draws the sprites, hills, and clouds. Also containts logic for pressing buttons. 
     drawMainMenu() {
 
-        //background
+        //background    
         image(sprites.background, 0, 0, width, height);
 
         //Clouds
@@ -141,67 +141,71 @@ class mainMenu {
                     if (i === 0) {
                         game.loadTilemap(intro_tilemap);
                         game.state = "game";
+                        return;
                     }
                     else if (i === 1)
                         game.state = "tutorial";
+                        return;
                 }
             }
-
             textSize(15);
             textStyle(BOLD);
             fill(0);
-
             text(buttonTitles[i], buttonX + 60, buttonY + 25);
+        }
 
-            for (let i = 0; i < game.blocks.length; i++) {
-                game.blocks[i].draw();
+        for (let i = 0; i < game.blocks.length; i++) {
+            game.blocks[i].draw();
+        }
+
+        for (let i = 0; i < game.spikes.length; i++) {
+            game.spikes[i].draw();
+        }
+
+        //Player
+        game.player.draw();
+        game.player.vel.x = game.player.max_xspd;
+
+        // if (game.player.x >= width + game.player.width) {
+        //     game.player.x = -game.player.width / 2;
+        //     game.player.y = height - game.player.height - TILE_SIZE;
+        // }
+
+        //player jumps
+        if (game.player.x >= width / 2.5 && game.player.x < width / 2) {
+            if (game.player.vel.y === 0) {
+                game.player.vel.y = game.player.jmp_spd;
+                game.player.jumps--;
             }
+        }
+        game.player.vel.y += game.player.gravity.y;
 
-            for (let i = 0; i < game.spikes.length; i++) {
-                game.spikes[i].draw();
-            }
+        let pos = game.player.playerCollision();
+        game.player.x = pos[0];
+        game.player.y = pos[1];
 
-            //Player
-            game.player.draw();
-            game.player.vel.x = game.player.max_xspd;
+        //Slime
+        for (let i = 0; i < game.slimes.length; i++) {
+            let slime = game.slimes[i];
+            slime.draw();
+        }
 
-            if (game.player.x >= width + game.player.width) {
-                game.player.x = -game.player.width / 2;
-                game.player.y = height - game.player.height - TILE_SIZE;
-            }
+        if (game.player.x >= width / 2) {
+            game.slimes[0].jump_state = 2;
+        }
 
-            //player jumps
-            if (game.player.x >= width / 2.5 && game.player.x < width / 2) {
-                if (game.player.vel.y === 0) {
-                    game.player.vel.y = game.player.jmp_spd;
-                    game.player.jumps--;
-                }
-            }
-            game.player.vel.y += game.player.gravity.y;
+        if (game.player.x <= width / 2) {
+            game.slimes[0].jump_state = 0;
+        }
 
-            let pos = game.player.playerCollision();
-            game.player.x = pos[0];
-            game.player.y = pos[1];
+        //bat
+        for (let i = 0; i < game.bats.length; i++) {
+            let bat = game.bats[i];
+            bat.draw();
+            bat.x--;
 
-            //Slime
-            game.slimes[0].draw();
-            if (game.player.x >= width / 2) {
-                game.slimes[0].jump_state = 2;
-            }
-
-            if (game.player.x <= width / 2) {
-                game.slimes[0].jump_state = 0;
-            }
-
-            //bat
-            for (let i = 0; i < game.bats.length; i++) {
-                let bat = game.bats[i];
-                bat.draw();
-                bat.x--;
-
-                if (bat.x < -bat.width) {
-                    bat.x = width + bat.width;
-                }
+            if (bat.x < -bat.width) {
+                bat.x = width + bat.width;
             }
         }
     }

@@ -35,7 +35,8 @@ class Sprites {
         for (let i = 0; i < 12; i++) {
             this.bat.push(loadImage('sprites/bat' + str(i) + '.png'));
         }
-
+        this.bat_hurt = loadImage('sprites/bat_hurt.png');
+        
         // rat sprites -> https://craftpix.net/freebies/free-street-animal-pixel-art-asset-pack/
         this.rat_run = [];
         this.rat_hurt = [];
