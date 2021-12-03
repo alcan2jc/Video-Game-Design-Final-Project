@@ -303,10 +303,6 @@ class Player {
         return sprites.sword[this.anim_counter_sword];
     }
 
-<<<<<<< HEAD
-    // player jumps
-=======
->>>>>>> 5557586a01685c9dca97163260b3418f7c8498f2
     jump() {
         this.vel.y = this.jmp_spd;
         this.jumps--;
@@ -404,11 +400,8 @@ class Player {
         this.y = newpos[1];
     }
 
-<<<<<<< HEAD
 
     // draws player to canvas
-=======
->>>>>>> 5557586a01685c9dca97163260b3418f7c8498f2
     draw() {
         if (this.x_dir == -1) {
             push();
