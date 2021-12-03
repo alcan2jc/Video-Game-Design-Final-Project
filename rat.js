@@ -32,8 +32,13 @@ class Rat {
         this.invincibility = 0.5;
         this.invincibilityFrame = 0;
 
+        this.switchFrame = 0;
+
+        this.forces = new p5.Vector(0, 0);
+        this.xacc = new p5.Vector(.75, 0);
+        this.xacc_n = new p5.Vector(-.75, 0);
+        this.gravity = new p5.Vector(0, 0.3);
         this.vel = new p5.Vector(0, 0);
-        this.acc = new p5.Vector(0, 0);
 
         this.animation_state = 0; // 0: idle 1: running 2: airborn
         this.anim_counter = 0; //animation counter for moving
@@ -95,6 +100,54 @@ class Rat {
                 }
             }
         }
+
+        // spike collision
+        //x
+        for (let i = 0; i < game.spikes.length; i++) {
+            let block = game.spikes[i];
+
+            let d = abs(this.x - block.x) + abs(this.y - block.y);
+
+            if (d < 90) {
+
+                if (
+                    newx + this.width > block.x &&
+                    newx < block.x + block.width &&
+                    this.y + this.height > block.y &&
+                    this.y < block.y + block.height) {
+
+                    newx = this.x;
+                    break;
+                }
+            }
+        }
+
+        // y
+        for (let i = 0; i < game.spikes.length; i++) {
+            let block = game.spikes[i];
+
+            let d = abs(this.x - block.x) + abs(this.y - block.y);
+
+            if (d < 90) {
+                if (
+                    newx + this.width > block.x &&
+                    newx < block.x + block.width &&
+                    newy + this.height > block.y &&
+                    newy < block.y + block.height) {
+
+                    if (this.yvel > 0) {
+                        this.jumps = this.max_jumps;
+
+                        this.xvel *= this.friction;
+                    }
+
+                    this.yvel = 0;
+                    newy = this.y;
+                    break;
+                }
+            }
+        }
+        
         return [newx, newy]; //new = old for when there is collision
     }
 
@@ -170,6 +223,8 @@ class Rat {
 
     //Updates rat movement, collision, lives, and animations. 
     update() {
+        this.forces.x = 0;
+        this.forces.y = 0;
         this.vel.x = 0;
         if (this.move === 1) { //1 = left
             this.vel.x = -this.xspd;
@@ -178,6 +233,10 @@ class Rat {
             this.vel.x = this.xspd;
         }
 
+        if ((frameCount - this.switchFrame) > 240) {
+            this.switchFrame = frameCount;
+            this.move === 1 ? this.move = 2 : this.move = 1;
+        }
         //Only check sword collision when player is swinging.
         if (game.player.swinging) {
             this.checkSwordCollision();
@@ -198,6 +257,8 @@ class Rat {
                 this.animation_state = 1;
             }
         }
+        this.forces.add(this.gravity);
+        this.vel.add(this.forces);
 
         let newpos = this.wallCollision();
 

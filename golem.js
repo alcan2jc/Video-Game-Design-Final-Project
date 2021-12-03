@@ -335,21 +335,9 @@ class Golem {
         this.forces.x = 0;
         this.forces.y = 0;
 
-        // if ((frameCount - this.invincibilityFrame) <= this.invincibility * 60) {
-        // }
-        // if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
-        //     // this.forces.add(this.xacc_n);
-        //     this.move = 1;
-        // }
-        // else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
-        //     this.move = 2;
-        // }
-
         this.vel.x = 0;
 
         this.GolemFSM();
-
-
 
         //Only check sword collision when player is swinging.
         if (game.player.swinging) {
@@ -382,12 +370,6 @@ class Golem {
                 this.animation_state = 0;
             }
 
-            /*
-            if (this.vel.x !== 0) {
-                this.animation_state = 1;
-            }
-            */
-
             if (this.jumping) {
                 this.animation_state = 4;
                 if (this.vel.y === 0) {
@@ -403,7 +385,6 @@ class Golem {
                 this.animation_state = 5;
             }
         }
-
         this.forces.add(this.gravity);
         this.vel.add(this.forces);
 

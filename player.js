@@ -268,6 +268,34 @@ class Player {
             }
         }
 
+        // bat
+        for (let i = 0; i < game.bats.length; i++) {
+            let e = game.bats[i];
+            let d = abs(this.x - e.x) + abs(this.y - e.y);
+
+            if (d < 300) {
+                if (
+                    newx + this.width > e.x &&
+                    newx < e.x + e.width &&
+                    newy + this.height > e.y &&
+                    newy < e.y + e.height) {
+                    if ((frameCount - this.invincibilityFrame) > this.invincibility * 60) {
+                        this.invincibilityFrame = frameCount;
+                        if (this.lastDir === 'left') {
+                            this.vel.x += 10;
+                        } else {
+                            this.vel.x -= 10;
+                        }
+                        this.vel.y -= 5;
+                        let damage = (e.swinging) ? 10 : 5;
+                        game.player.health -= damage;
+                        game.player.health = max(0, game.player.health);
+                        game.animator.hitEffect();
+                    }
+                    break;
+                }
+            }
+        }
         if (newx < 0) {
             newx = 0;
         } else if (newx + this.width > game.level_width) {
@@ -355,6 +383,13 @@ class Player {
             } else if (this.touching_wall_x) {
                 this.wall_jump();
             }
+        }
+
+        //Keep within bounds
+        if (this.x < 0) {
+            this.x = 0;
+        } else if (this.x > game.level_width - this.width) {
+            this.x = game.level_width - this.width;
         }
 
         //slashing
