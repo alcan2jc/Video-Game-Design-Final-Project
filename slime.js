@@ -15,74 +15,96 @@ class Slime {
         this.height = h;
 
         // constants for jumping and speed
-        this.aggro_range = 100;
+        this.aggro_range = 500;
         this.jumps = 0;
         this.max_jumps = 1;
         this.jmp_spd = -7.5;
+        this.jump_xspd = 7;
         this.xspd = 3;
         this.yacc = .3
 
         //velocity vars
         this.yvel = 0;
         this.xvel = 0;
+        this.friction = 0.85;    // friction coefficient
 
         //Invicibility frames after getting hit.
         this.invincibility = 0.5;
         this.invincibilityFrame = 0;
 
         //gameplay variables
-        this.anim_counter = 0;
         this.dead = false; //death flag
         this.hurt = false; //for when to animate being damaged
-        this.anim_counter_hurt = 0; //For which to animate in the hurt animations array
-        this.anim_counter_dead = 0; //For which to animate in the dead animations array
+        this.hurt_counter = 0; //For which to animate in the hurt animations array
+        this.hurt_counter_max = 30; // how long to display hurt animation after getting hit
         this.lives = 5;//amount of hits enemy can take. 
 
-        this.animation_state = 0; // 0: idle, 1: squished, 2: tall
-        this.anim_counter_hurt = 0; //animation counter for hurt
-        this.anim_counter_dead = 0; //animation counter for dead
-        this.anim_speed = 60 / 10; // frames per second
-        this.anim_speed_hurt = 60 / 2; // frames per second
-        this.anim_speed_dead = 60 / 10; // frames per second
-        this.lives = 2; //amount of hits enemy can take. 
-        this.anim_counter = 0; //animation counter for moving
+        this.jump_state = 0; //0: idle, 1: about to jump, 2: jumped
+        this.jump_state_timer_max = 120;    // number of frames slime must wind up before jumping
+        this.jump_state_timer_wait = 60;   // number of frames slime must wait after jumping
     }
 
     //State machine of slime
     FSM() {
-        let dist = abs(this.x - game.player.x) + abs(this.y - game.player.y);
 
-        if (dist < this.aggro_range) {
-            // chase the player
-            //this.jumpFSM();
+        switch (this.jump_state) {
+            case 0: {
+                let dist = abs(this.x - game.player.x) + abs(this.y - game.player.y);
+
+                if (dist < this.aggro_range) {
+                    // chase the player
+                    this.jump_state = 1;
+                    this.jump_state_timer = 0;
+                }
+                break;
+            }
+
+            case 1: {
+                this.jump_state_timer++;
+                if (this.jump_state_timer > this.jump_state_timer_max) {
+                    /* jump at player */
+
+                    // direction to jump
+                    let dir = Math.sign(game.player.x - this.x);
+
+                    // jump at player
+                    this.yvel = this.jmp_spd;
+                    this.xvel = this.jump_xspd * dir;
+
+                    // change to jump state
+                    this.jump_state = 2;
+
+                    this.jump_state_timer = 0;
+                }
+                break;
+            }
+
+            case 2: {
+                this.jump_state_timer++;
+
+                if (this.jump_state_timer > this.jump_state_timer_wait) {
+                    this.jump_state = 0;
+                    this.jump_state_timer = 0;
+                }
+                break;
+            }
+
+            default: break;
+
         }
     }
 
-    //Returns the correct sprite for the animation state. 
+    // returns the current sprite to be used
     getSprite() {
-        switch (this.animation_state) {
-            case 0: return sprites.slime_idle; //idle
-            case 1: {
-                if (!(frameCount % this.anim_speed_hurt))
-                    this.hurt = false;
-                return sprites.slime_hurt;
-            }
-            case 2: {
-                if (!(frameCount % this.anim_speed_dead)) {
-                    this.anim_counter_dead++;
-                    this.anim_counter_dead %= 3;
-                    if (this.anim_counter_dead === 0) {
-                        this.x = -100;
-                        this.y = -100;
-                    }
-                }
-                return sprites.slime_dead[this.anim_counter_dead];
-            }
-            default:
-                print('Invalide animation State');
-        }
+        if (this.hurt) return sprites.slime_hurt;
+        if (this.dead) return sprites.slime_hurt;
 
-        return null;
+        switch (this.jump_state) {
+            case 0: return sprites.slime_idle;
+            case 1: return sprites.slime_squished;
+            case 2: return sprites.slime_tall;
+            default: return sprites.slime_idle;
+        }
     }
 
     //Check if Rat has been hit by the sword.
@@ -114,7 +136,16 @@ class Slime {
     update() {
 
         /* Insert AI logic here */
-        //this.FSM();
+        this.FSM();
+
+        if (this.hurt) {
+            this.hurt_counter++;
+
+            if (this.hurt_counter > this.hurt_counter_max) {
+                this.hurt_counter = 0;
+                this.hurt = false;
+            }
+        }
 
         this.yvel += this.yacc;
 
@@ -158,6 +189,8 @@ class Slime {
 
                     if (this.yvel > 0) {
                         this.jumps = this.max_jumps;
+
+                        this.xvel *= this.friction;
                     }
 
                     this.yvel = 0;
@@ -174,38 +207,12 @@ class Slime {
         if (game.player.swinging) {
             this.checkSwordCollision();
         }
-        
-        if (this.xvel === 0) {
-            this.animation_state = 0;
-        }
-
-        if (this.hurt) {
-            this.animation_state = 1;
-        }
-
-        if (this.dead) {
-            this.animation_state = 2;
-        }
     }
 
     //Draws the slime. 
     draw() {
         this.update();
-
         image(this.getSprite(), this.x, this.y, this.width, this.height);
-
-        /*
-        if (this.xvel < 0) {
-            push();
-            scale(-1, 1);
-            image(this.getSprite(), -this.x - this.width, this.y, this.width, this.height); 
-            pop();
-          } else {
-            image(this.getSprite(), this.x, this.y, this.width, this.height);
-          }
-          */
     }
-
-
 
 }
