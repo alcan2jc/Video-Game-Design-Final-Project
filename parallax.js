@@ -8,34 +8,34 @@ class Parallax {
     // setup background for each level
     // level_width, total lenght of the level in pixels
     setup_background(level_width) {
-        this.mnts = new background_mountain(0, 0, 0, level_width);
+        this.mnts = new background_mountain(0, 0, level_width);
+        this.trees = new background_tree(200, -500, level_width);
     }
 
     // updates the position of background images
     update() {
         this.mnts.update();
+        this.trees.update();
     }
 
     // draws background images to canvsa
     draw() {
         this.update();
         this.mnts.draw();
+        this.trees.draw();
     }
 }
 
 // class for mountain background
 class background_mountain {
-
-    // x position
-    // y position
     // x min: minimum x position in game world
     // x max: maximum x position in game worls
-    constructor(x, y, xmin, xmax) {
+    constructor(y, xmin, xmax) {
         this.mountains = [];
 
         let xcurr = xmin - MOUTNAIN_WIDTH/2;
         while (xcurr + MOUTNAIN_WIDTH < xmax) {
-            this.mountains.push(new background_image(xcurr, 0, MOUTNAIN_WIDTH, height, sprites.background, 0.2));
+            this.mountains.push(new background_image(xcurr, y, MOUTNAIN_WIDTH, height, sprites.background, 0.2));
             xcurr += MOUTNAIN_WIDTH;
         }
     }
@@ -51,6 +51,38 @@ class background_mountain {
     draw() {
         for (let i = 0; i < this.mountains.length; i++) {
             this.mountains[i].draw();
+        }
+    }
+}
+
+var TREE_WIDTH = 600;
+var TREE_HEIGHT = 500;
+
+// class for background trees
+class background_tree {
+    // x min: minimum x position
+    // x max: maximum x position
+    constructor(y, xmin, xmax) {
+        this.trees = [];
+        print('start');
+
+        let xcurr = xmin - TREE_WIDTH/2;
+        while(xcurr + TREE_WIDTH < xmax) {
+            print(xcurr);
+            this.trees.push(new background_image(xcurr, y, TREE_WIDTH, TREE_HEIGHT, sprites.trees, 0.3));
+            xcurr += TREE_WIDTH;
+        }
+    }
+
+    update() {
+        for (let i = 0; i < this.trees.length; i++) {
+            this.trees[i].update();
+        }
+    }
+
+    draw() {
+        for (let i = 0; i < this.trees.length; i++) {
+            this.trees[i].draw();
         }
     }
 }

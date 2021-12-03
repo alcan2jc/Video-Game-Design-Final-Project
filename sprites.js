@@ -102,6 +102,7 @@ class Sprites {
         this.dirt = loadImage('sprites/dirt.png');
         this.spike = loadImage('sprites/spike.png');
         this.background = loadImage('sprites/MountainBackground.png');
+        this.trees = loadImage('sprites/trees.png');
 
         // shuriken
         this.shuriken = loadImage('sprites/Shuriken.png');

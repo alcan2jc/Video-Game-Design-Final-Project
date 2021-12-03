@@ -269,7 +269,7 @@ class Golem {
     GolemFSM() {
         let dist = abs(this.x - game.player.x + 50) + abs(this.y - game.player.y);
 
-        //print(this.state);
+        if (this.dead) return;
 
         switch (this.state) {
 
