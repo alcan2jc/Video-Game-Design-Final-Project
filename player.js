@@ -1,5 +1,12 @@
 
+// player class
+// the character the player controlls
 class Player {
+
+    // x position
+    // y position
+    // w width of player
+    // h height of player
     constructor(x, y, w, h) {
         this.x = x;
         this.y = y;
@@ -63,6 +70,8 @@ class Player {
         this.touching_wall_y = false;
     }
 
+    // checks for collision between player and other entities
+    // blocks, spikes, enemys, etc..
     playerCollision() {
         this.touching_wall_x = false;
         this.touching_wall_y = false;
@@ -249,7 +258,8 @@ class Player {
                             this.vel.x -= 10;
                         }
                         this.vel.y -= 5;
-                        game.player.health -= 5;
+                        let damage = (golem.swinging) ? 10 : 5
+                        game.player.health -= damage;
                         game.player.health = max(0, game.player.health);
                         game.animator.hitEffect();
                     }
@@ -261,6 +271,7 @@ class Player {
         return [newx, newy];
     }
 
+    // gets sprite to dislpay in player animation
     getSprite() {
         switch (this.animation_state) {
             // idle
@@ -282,6 +293,7 @@ class Player {
         return null;
     }
 
+    // gets sword sprite to display in swinging animation
     getSwordSprite() {
         if (!(frameCount % this.anim_speed_sword)) {
             this.anim_counter_sword++;
@@ -298,15 +310,23 @@ class Player {
         game.animator.jumpEffect(this.x + this.width / 2, this.y + this.height);
     }
 
+    // player wall jumps
     wall_jump() {
         this.jump();
         this.vel.x = this.jmp_spd_x * -this.x_dir;
     }
 
+    // unused function
+    // limits player to a maximum speed
     limit_speed() {
         this.vel.x = (abs(this.vel.x) > this.max_xspd) ? (this.vel.x > 0) ? this.max_xspd : -this.max_xspd : this.vel.x;
     }
 
+    // updates player state
+    // position is calculated
+    // player input is determined
+    // future position determined
+    // etc.
     update() {
         this.forces.x = 0;
         this.forces.y = 0;
@@ -360,6 +380,7 @@ class Player {
         }
 
         this.forces.add(this.gravity);
+
         this.vel.add(this.forces);
 
         this.prev_key_pressed = keyIsPressed && (keyIsDown(UP_ARROW) || keyIsDown(87));
@@ -380,6 +401,8 @@ class Player {
         this.y = newpos[1];
     }
 
+
+    // draws player to canvas
     draw() {
         if (this.x_dir == -1) {
             push();
@@ -391,6 +414,7 @@ class Player {
         }
     }
 
+    // draws sword to canvas
     drawSword() {
         //slashing
         if (this.lastDir === 'left') {

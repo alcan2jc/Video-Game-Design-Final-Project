@@ -16,10 +16,14 @@ class Sprites {
         // slime sprites
         this.slime_idle = loadImage('sprites/slime_idle.png');
 
+        this.slime_squished = loadImage('sprites/slime_squished.png');
+
+        /*
         this.slime_dead = [];
         for (let i = 0; i < 3; i++) {
             this.slime_dead.push(loadImage('sprites/slime_squished.png'));
         }
+        */
         this.slime_tall = loadImage('sprites/slime_tall.png');
 
         this.slime_hurt = loadImage('sprites/slime_hurt.png');

@@ -19,7 +19,7 @@ class Golem {
         this.jumps = 0;
         this.max_jumps = 1;
         this.jmp_spd = -7.5;
-        this.xspd = 2;
+        this.xspd = 1;
         this.yacc = .3;
 
         //club variables
@@ -64,6 +64,14 @@ class Golem {
         this.anim_speed_hurt = 60 / 30; // speed of hurt animations in frames per second
         this.anim_speed_dead = 60 / 20; // speed of dead animations in frames per second
         this.anim_speed_jump = 60 / 20; // speed of jump animations in frames per second
+        this.anim_speed_sword = 60 / 20;    // speed of swinging animation in frames per second
+
+        this.state = 0; // 0: idle, 1: chasing, 2:swing
+        this.aggro_range = 350; // range for the golem to aggro player
+        this.swing_range = 150; // range for golem to swing
+        this.move_dir;  // varible that holdes the direction of movement
+        this.wonder_timer = 999;  // timer used for wonder state
+        this.wonder_dir = (Math.random() < .5) ? -1 : 1; // variable for wondering direction
     }
 
     //Checks Golem to wall collision
@@ -258,22 +266,88 @@ class Golem {
         }
     }
 
+    GolemFSM() {
+        let dist = abs(this.x - game.player.x + 50) + abs(this.y - game.player.y);
+
+        //print(this.state);
+
+        switch (this.state) {
+
+            case 0: {
+
+                // wonder
+                this.wonder_timer++;
+
+                if ((this.wonder_timer > 120)) {
+                    this.wonder_timer = 0;
+                    let rand = Math.random();
+                    if (rand < .3)
+                        this.wonder_dir = -1;   // left
+                    else if (rand > .7)
+                        this.wonder_dir = 1;    // right
+                    else
+                        this.wonder_dir = 0;    // idle
+
+                    this.move_dir = this.wonder_dir;
+                }
+
+                this.vel.x = this.xspd * this.wonder_dir;
+
+                if (dist < this.aggro_range) {
+                    // chase player
+                    this.state = 1;
+                }
+
+                break;
+            }
+
+            case 1: {
+                // direction to chase
+                let dir = Math.sign(game.player.x - 50 - this.x);
+                let diry = Math.sign(game.player.y + 25 - this.y);
+                this.move_dir = dir;
+
+                this.vel.x = this.xspd * dir;
+
+                if (diry == -1 && this.jumps > 0) {
+                    this.vel.y = this.jmp_spd;
+                    this.jumps--;
+                    this.jumping = true;
+                }
+
+                if (dist > this.aggro_range) {
+                    this.state = 0;
+                    this.wonder_timer = 999;
+                } else if (dist < this.swing_range) {
+                    this.move = 4;
+                }
+            }
+
+        }
+
+        if (this.vel.x != 0)
+            this.animation_state = 1;
+
+    }
+
     //Updates golem movement, collision, lives, and animations. 
     update() {
         this.forces.x = 0;
         this.forces.y = 0;
 
-        
+        // if ((frameCount - this.invincibilityFrame) <= this.invincibility * 60) {
+        // }
+        // if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
+        //     // this.forces.add(this.xacc_n);
+        //     this.move = 1;
+        // }
+        // else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
+        //     this.move = 2;
+        // }
 
         this.vel.x = 0;
-        if (this.move === 1) { //1 = left
-            this.vel.x = -this.xspd;
-            this.lastDir = 'left';
-        }
-        else if (this.move === 2) { //2 = right
-            this.vel.x = this.xspd;
-            this.lastDir = 'right';
-        }
+
+        this.GolemFSM();
 
 
 
@@ -293,6 +367,7 @@ class Golem {
                 this.swinging = true;
             }
         }
+
         //animations
         if (this.hurt || this.dead) {
             if (this.hurt) {
@@ -307,9 +382,11 @@ class Golem {
                 this.animation_state = 0;
             }
 
+            /*
             if (this.vel.x !== 0) {
                 this.animation_state = 1;
             }
+            */
 
             if (this.jumping) {
                 this.animation_state = 4;
@@ -339,7 +416,7 @@ class Golem {
     //Draws the golem. 
     draw() {
         this.update();
-        if (this.lastDir === 'left') {
+        if (this.move_dir == -1) {
             push();
             scale(-1, 1);
             image(this.getSprite(), -this.x - this.width, this.y, this.width, this.height);
