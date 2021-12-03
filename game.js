@@ -93,6 +93,9 @@ class Game {
             case "game": // game
                 this.game_state();
                 break;
+            case "end":
+                this.end_state();
+                break;
             default: break;
         }
     }
@@ -181,6 +184,17 @@ class Game {
         this.snow.draw();
 
         this.HUD.draw();
+    }
+
+    end_state() {
+
+        if (true) { // dead screen
+            fill(0);
+
+
+            image(sprites.player_idle, 200, 100, width/2, height/2);
+
+        }
     }
 }
 
