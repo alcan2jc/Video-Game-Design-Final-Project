@@ -121,6 +121,53 @@ class Bat {
                 }
             }
         }
+        // spike collision
+        //x
+        for (let i = 0; i < game.spikes.length; i++) {
+            let block = game.spikes[i];
+
+            let d = abs(this.x - block.x) + abs(this.y - block.y);
+
+            if (d < 90) {
+
+                if (
+                    newx + this.width > block.x &&
+                    newx < block.x + block.width &&
+                    this.y + this.height > block.y &&
+                    this.y < block.y + block.height) {
+
+                    newx = this.x;
+                    break;
+                }
+            }
+        }
+
+        // y
+        for (let i = 0; i < game.spikes.length; i++) {
+            let block = game.spikes[i];
+
+            let d = abs(this.x - block.x) + abs(this.y - block.y);
+
+            if (d < 90) {
+                if (
+                    newx + this.width > block.x &&
+                    newx < block.x + block.width &&
+                    newy + this.height > block.y &&
+                    newy < block.y + block.height) {
+
+                    if (this.yvel > 0) {
+                        this.jumps = this.max_jumps;
+
+                        this.xvel *= this.friction;
+                    }
+
+                    this.yvel = 0;
+                    newy = this.y;
+                    break;
+                }
+            }
+        }
+
         return [newx, newy]; //new = old for when there is collision
     }
 
@@ -160,6 +207,10 @@ class Bat {
             this.vel.x = this.xspd;
         }
 
+        if (this.x < this.width || this.x > game.level_width - this.width) {
+            this.vel.x < 0 ? this.move = 2 : this.move = 1;
+        }
+        
         //Attack if dist is less than the aggro range. 
         let d = abs(this.x - game.player.x) + abs(this.y - game.player.y);
         if (d < this.aggro_dist && this.move !== 4) {

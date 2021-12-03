@@ -100,7 +100,7 @@ class Animator {
     draw() {
 
       fill(255, 0, 0, this.alpha);
-      rect(0, 0, game.level_width, height);
+      rect(0, 0, game.level_width, game.level_height);
 
       this.alpha -= 5;
 

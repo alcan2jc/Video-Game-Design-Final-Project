@@ -166,10 +166,10 @@ class mainMenu {
         game.player.draw();
         game.player.vel.x = game.player.max_xspd;
 
-        // if (game.player.x >= width + game.player.width) {
-        //     game.player.x = -game.player.width / 2;
-        //     game.player.y = height - game.player.height - TILE_SIZE;
-        // }
+        if (game.player.x >= width + game.player.width) {
+            game.player.x = -game.player.width / 2;
+            game.player.y = height - game.player.height - TILE_SIZE;
+        }
 
         //player jumps
         if (game.player.x >= width / 2.5 && game.player.x < width / 2) {

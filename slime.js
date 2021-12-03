@@ -212,6 +212,53 @@ class Slime {
             }
         }
 
+        // spike collision
+        //x
+        for (let i = 0; i < game.spikes.length; i++) {
+            let block = game.spikes[i];
+
+            let d = abs(this.x - block.x) + abs(this.y - block.y);
+
+            if (d < 90) {
+
+                if (
+                    newx + this.width > block.x &&
+                    newx < block.x + block.width &&
+                    this.y + this.height > block.y &&
+                    this.y < block.y + block.height) {
+
+                    newx = this.x;
+                    break;
+                }
+            }
+        }
+
+        // y
+        for (let i = 0; i < game.spikes.length; i++) {
+            let block = game.spikes[i];
+
+            let d = abs(this.x - block.x) + abs(this.y - block.y);
+
+            if (d < 90) {
+                if (
+                    newx + this.width > block.x &&
+                    newx < block.x + block.width &&
+                    newy + this.height > block.y &&
+                    newy < block.y + block.height) {
+
+                    if (this.yvel > 0) {
+                        this.jumps = this.max_jumps;
+
+                        this.xvel *= this.friction;
+                    }
+
+                    this.yvel = 0;
+                    newy = this.y;
+                    break;
+                }
+            }
+        }
+
         this.x = newx;
         this.y = newy;
 
@@ -226,5 +273,4 @@ class Slime {
         this.update();
         image(this.getSprite(), this.x, this.y, this.width, this.height);
     }
-
 }
