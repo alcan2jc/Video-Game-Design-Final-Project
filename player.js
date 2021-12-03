@@ -258,7 +258,8 @@ class Player {
                             this.vel.x -= 10;
                         }
                         this.vel.y -= 5;
-                        game.player.health -= 5;
+                        let damage = (golem.swinging) ? 10 : 5
+                        game.player.health -= damage;
                         game.player.health = max(0, game.player.health);
                         game.animator.hitEffect();
                     }
