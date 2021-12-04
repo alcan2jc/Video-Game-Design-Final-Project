@@ -13,8 +13,6 @@ class Sounds {
         //https://opengameart.org/content/platformer-jumping-sounds
         this.player_jump = createAudio('sounds/jump.wav');
         this.player_jump.volume(0.1);
-
-
     }
 
     player_dash() {

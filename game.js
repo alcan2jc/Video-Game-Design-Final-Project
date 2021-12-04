@@ -16,6 +16,7 @@ class Game {
         this.camera_still = false;    // used for parallax algorithm
 
         this.snow = new Snow();
+        this.blood = new Blood(300, 620, 120);
         this.HUD = new HUD();
         this.parallax = new Parallax();
         this.animator = new Animator();
@@ -24,6 +25,8 @@ class Game {
         this.loadTilemap(mainmenu_tilemap);
         this.tutorial = new Tutorial();
         this.state = "main menu";
+
+        this.end_state_timer = 0;
     }
 
     // loads given timemal
@@ -93,6 +96,9 @@ class Game {
                 break;
             case "game": // game
                 this.game_state();
+                break;
+            case "end":
+                this.end_state();
                 break;
             default: break;
         }
@@ -191,6 +197,25 @@ class Game {
         this.snow.draw();
 
         this.HUD.draw();
+    }
+
+    end_state() {
+        this.end_state_timer += 0.2;
+
+        if (true) { // dead screen
+            background(100);
+            fill(255, 0, 0, min(this.end_state_timer, 255));
+            textSize(100);
+            text('You Died', 270, 100);
+
+            fill(255, 0, 0, min(max(this.end_state_timer - 255, 0), 255));
+            text('Try Again?', 230, 600);
+
+            image(sprites.player_dead, 270, 120, 400, 400);
+
+            this.blood.draw();
+
+        }
     }
 }
 

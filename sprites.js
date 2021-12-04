@@ -13,6 +13,8 @@ class Sprites {
             this.player_run.push(loadImage('sprites/player_run' + str(i) + '.png'));
         }
 
+        this.player_dead = loadImage('sprites/game_over.png');
+
         // slime sprites
         this.slime_idle = loadImage('sprites/slime_idle.png');
         this.slime_squished = loadImage('sprites/slime_squished.png');
@@ -111,6 +113,8 @@ class Sprites {
 
         //win
         this.win = loadImage('sprites/win.png');
+        // blood drop
+        this.blood_drop = loadImage('sprites/blood_drop.png');
     }
 
     // function for testing images
