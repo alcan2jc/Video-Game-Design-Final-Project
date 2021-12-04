@@ -361,6 +361,13 @@ class Golem {
             }
         }
 
+        //Keep within bounds
+        if (this.x < this.width) {
+            this.x = this.width;
+        } else if (this.x > game.level_width - this.width) {
+            this.x = game.level_width - this.width;
+        }
+        
         //animations
         if (this.hurt || this.dead) {
             if (this.hurt) {

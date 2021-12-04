@@ -266,12 +266,12 @@ var mainmenu_tilemap = [
 ];
 
 var intro_tilemap = [
-    "b                                                                                       l      ",
-    "                                                                                               ",
+    "                                                                                        l      ",
+    "                                         b                                                     ",
     "                                                                                               ",
     "                              s                            r                                   ",
     "                                       ggggggtttttttttttttttggggttttttttttgggg        ggggggggg",
-    "                          ggggggggg    ggggggggggggggggggggggggggggggggggggggg        ggggggggg",
+    "                 p        ggggggggg    ggggggggggggggggggggggggggggggggggggggg        ggggggggg",
     "                ggggg                                                                          ",
     "                                                                                               ",
     "                                                                                               ",
@@ -293,5 +293,5 @@ var intro_tilemap = [
     "                                 g      g                                     l             ggg",
     "                                                                                            ggg",
     "                         s                                                                  ggg",
-    "p                                                                                           ggg",
+    "                                                                                            ggg",
     "gggggggggggggttttggggggggggggggggggggggggggtttttttttttttttggggggggggggggggggggggggggggggggggggg"];
