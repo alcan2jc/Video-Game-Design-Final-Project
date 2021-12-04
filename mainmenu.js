@@ -110,7 +110,7 @@ class mainMenu {
 
         //Hills
         this.hill.draw();
-
+        game.parallax.draw();
         //Title
         textAlign(CENTER, CENTER);
         push();
@@ -172,12 +172,12 @@ class mainMenu {
         }
 
         //player jumps
-        if (game.player.x >= width / 2.5 && game.player.x < width / 2) {
+        if (game.player.x >= width / 2.6 && game.player.x <= width/2) {
             if (game.player.vel.y === 0) {
-                game.player.vel.y = game.player.jmp_spd;
-                game.player.jumps--;
+                game.player.vel.y = -6;
             }
         }
+
         game.player.vel.y += game.player.gravity.y;
 
         let pos = game.player.playerCollision();
@@ -208,5 +208,6 @@ class mainMenu {
                 bat.x = width + bat.width;
             }
         }
+        game.snow.draw();
     }
 }

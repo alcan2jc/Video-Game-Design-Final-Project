@@ -25,7 +25,7 @@ class Bat {
         //game variables
         this.dead = false; //death flag
         this.hurt = false; //for when to animate being damaged
-        this.lives = 5; //amount of hits enemy can take. 
+        this.lives = 3; //amount of hits enemy can take. 
         this.hurtFrame = 0;
 
         this.vel = new p5.Vector(0, 0);
@@ -175,6 +175,7 @@ class Bat {
     checkSwordCollision() {
         if (game.player.lastDir === 'left') { //if player is facing left
             if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX - 2.5 * game.player.width, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
+                sounds.enemy_hit.play();
                 this.invincibilityFrame = frameCount;
                 this.lives--;
                 if (this.lives > 0) {
@@ -182,10 +183,12 @@ class Bat {
                     this.hurtFrame = frameCount;
                 } else {
                     this.dead = true;
+                    game.goal--;
                 }
             }
         } else { //if player is facing right
             if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
+                sounds.enemy_hit.play();
                 this.invincibilityFrame = frameCount;
                 this.lives--;
                 if (this.lives > 0) {
@@ -193,6 +196,7 @@ class Bat {
                     this.hurtFrame = frameCount;
                 } else {
                     this.dead = true;
+                    game.goal--;
                 }
             }
         }

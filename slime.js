@@ -37,7 +37,7 @@ class Slime {
         this.hurt = false; //for when to animate being damaged
         this.hurt_counter = 0; //For which to animate in the hurt animations array
         this.hurt_counter_max = 30; // how long to display hurt animation after getting hit
-        this.lives = 5;//amount of hits enemy can take. 
+        this.lives = 2;//amount of hits enemy can take. 
 
         this.jump_state = 0; //0: idle, 1: about to jump, 2: jumped
         this.jump_state_timer_max = 120;    // number of frames slime must wind up before jumping
@@ -54,6 +54,7 @@ class Slime {
             this.dead_timer++;
             if (this.dead_timer > this.dead_timer_max) {
                 delete this.x;
+
             }
 
             return;
@@ -119,26 +120,30 @@ class Slime {
         }
     }
 
-    //Check if Rat has been hit by the sword.
+    //Check if Slime has been hit by the sword.
     checkSwordCollision() {
         if (game.player.lastDir === 'left') { //if player is facing left
             if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX - 2.5 * game.player.width, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
+                sounds.enemy_hit.play();
                 this.invincibilityFrame = frameCount;
                 this.lives--;
                 if (this.lives > 0) {
                     this.hurt = true;
                 } else {
                     this.dead = true;
+                    game.goal--;
                 }
             }
         } else { //if player is facing right
             if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
+                sounds.enemy_hit.play();
                 this.invincibilityFrame = frameCount;
                 this.lives--;
                 if (this.lives > 0) {
                     this.hurt = true;
                 } else {
                     this.dead = true;
+                    game.goal--;
                 }
             }
         }

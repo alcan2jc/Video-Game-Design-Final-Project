@@ -177,13 +177,11 @@ class Rat {
             
             //dead
             case 3: {
-                
                 if (!(frameCount % this.anim_speed_dead)) {
                     this.anim_counter_dead++;
                     this.anim_counter_dead %= 4;
                     if (this.anim_counter_dead === 0) {
-                        this.x = -100;
-                        this.y = -100;
+                        delete this.x;
                     }
                 }
                 return sprites.rat_dead[this.anim_counter_dead];
@@ -200,22 +198,26 @@ class Rat {
     checkSwordCollision() {
         if (game.player.lastDir === 'left') { //if player is facing left
             if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX - 2.5 * game.player.width, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
+                sounds.enemy_hit.play();
                 this.invincibilityFrame = frameCount;
                 this.lives--;
                 if (this.lives > 0) {
                     this.hurt = true;
                 } else {
                     this.dead = true;
+                    game.goal--;
                 }
             }
         } else { //if player is facing right
             if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
+                sounds.enemy_hit.play();
                 this.invincibilityFrame = frameCount;
                 this.lives--;
                 if (this.lives > 0) {
                     this.hurt = true;
                 } else {
                     this.dead = true;
+                    game.goal--;
                 }
             }
         }
@@ -239,8 +241,8 @@ class Rat {
         }
 
         //Keep within bounds
-        if (this.x < 0) {
-            this.x = 0;
+        if (this.x < this.width) {
+            this.x = this.width;
         } else if (this.x > game.level_width - this.width) {
             this.x = game.level_width - this.width;
         }

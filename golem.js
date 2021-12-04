@@ -44,7 +44,7 @@ class Golem {
         this.anim_counter_jump = 0; //For which to animate in the jump animations array
         this.anim_counter_run = 0;
         this.anim_counter_idle = 0;
-        this.lives = 3; //amount of hits enemy can take. 
+        this.lives = 5; //amount of hits enemy can take. 
         this.jumping = false;
         //Invicibility frames after getting hit.
         this.invincibility = 1;
@@ -245,22 +245,26 @@ class Golem {
     checkSwordCollision() {
         if (game.player.lastDir === 'left') { //if player is facing left
             if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX - 2.5 * game.player.width, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
+                sounds.enemy_hit.play();
                 this.invincibilityFrame = frameCount;
                 this.lives--;
                 if (this.lives > 0) {
                     this.hurt = true;
                 } else {
                     this.dead = true;
+                    game.goal--;
                 }
             }
         } else { //if player is facing right
             if ((frameCount - this.invincibilityFrame) > this.invincibility * 60 && hasCollided(this.x, this.y, game.player.x - game.player.offsetX, game.player.y, this.width, this.height, game.player.swordWidth * 0.7, game.player.swordHeight / 5)) {
+                sounds.enemy_hit.play();
                 this.invincibilityFrame = frameCount;
                 this.lives--;
                 if (this.lives > 0) {
                     this.hurt = true;
                 } else {
                     this.dead = true;
+                    game.goal--;
                 }
             }
         }

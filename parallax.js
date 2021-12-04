@@ -28,7 +28,7 @@ class Parallax {
 
     // draws background images to canvsa
     draw() {
-        this.update();
+        // this.update();
         this.mnts.draw();
         this.trees.draw();
         this.clouds.draw();

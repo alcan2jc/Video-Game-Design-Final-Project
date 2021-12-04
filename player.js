@@ -100,7 +100,6 @@ class Player {
                         newx < block.x + block.width &&
                         this.y + this.height > block.y &&
                         this.y < block.y + block.height) {
-
                         this.touching_wall_x = true;
 
                         this.vel.x = 0;
@@ -166,6 +165,7 @@ class Player {
                     newy = this.y;
 
                     if ((frameCount - this.invincibilityFrame) > this.invincibility * 60) {
+                        sounds.player_hit.play();
                         this.invincibilityFrame = frameCount;
                         this.vel.y -= 5;
                         game.player.health -= 5;
@@ -191,6 +191,8 @@ class Player {
                     newy < slime.y + slime.height) {
 
                     if ((frameCount - this.invincibilityFrame) > this.invincibility * 60) {
+                        if (game.state === "game")
+                            sounds.player_hit.play();
                         this.invincibilityFrame = frameCount;
                         if (this.lastDir === 'left') {
                             this.vel.x += 10;
@@ -221,6 +223,7 @@ class Player {
                     newy < rat.y + rat.height) {
 
                     if ((frameCount - this.invincibilityFrame) > this.invincibility * 60) {
+                        sounds.player_hit.play();
                         this.invincibilityFrame = frameCount;
                         if (this.lastDir === 'left') {
                             this.vel.x += 10;
@@ -251,6 +254,7 @@ class Player {
                     newy < golem.y + 20 + golem.height - 30) {
 
                     if ((frameCount - this.invincibilityFrame) > this.invincibility * 60) {
+                        sounds.player_hit.play();
                         this.invincibilityFrame = frameCount;
                         if (this.lastDir === 'left') {
                             this.vel.x += 10;
@@ -280,6 +284,7 @@ class Player {
                     newy + this.height > e.y &&
                     newy < e.y + e.height) {
                     if ((frameCount - this.invincibilityFrame) > this.invincibility * 60) {
+                        sounds.player_hit.play();
                         this.invincibilityFrame = frameCount;
                         if (this.lastDir === 'left') {
                             this.vel.x += 10;
@@ -346,6 +351,7 @@ class Player {
 
     // player wall jumps
     wall_jump() {
+        sounds.player_jump.stop();
         sounds.player_jump.play();
         this.jump();
         this.vel.x = this.jmp_spd_x * -this.x_dir;
@@ -387,6 +393,10 @@ class Player {
             }
         }
 
+        //Check game over
+        if (this.health <= 0) {
+            game.state = "end";
+        }
         //Keep within bounds
         if (this.x < 0) {
             this.x = 0;
@@ -415,6 +425,7 @@ class Player {
             this.is_dashing = true;
             this.dash_vel = this.dash_spd * this.x_dir;
             this.vel.x = this.dash_vel;
+            sounds.player_dash.play();
         } else if (this.is_dashing) {
             this.vel.x = this.dash_vel;
             this.dash_timer--;

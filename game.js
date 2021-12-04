@@ -34,6 +34,7 @@ class Game {
     // loads given timemal
     // tm: the tilemap to load
     loadTilemap(tm) {
+        this.goal = 0;
         this.blocks = [];
         this.spikes = [];
         this.slimes = [];
@@ -60,18 +61,22 @@ class Game {
                     }
                     case 's': {
                         this.slimes.push(new Slime(x * TILE_SIZE, y * TILE_SIZE, SLIME_SIZE, SLIME_SIZE));
+                        this.goal++;
                         break;
                     }
                     case 'b': {
                         this.bats.push(new Bat(x * TILE_SIZE, y * TILE_SIZE, BAT_SIZE, BAT_SIZE));
+                        this.goal++;
                         break;
                     }
                     case 'r': {
                         this.rats.push(new Rat(x * TILE_SIZE, y * TILE_SIZE, RAT_SIZE, RAT_SIZE));
+                        this.goal++;
                         break;
                     }
                     case 'l': {
                         this.golems.push(new Golem(x * TILE_SIZE, y * TILE_SIZE, GOLEM_SIZE, GOLEM_SIZE));
+                        this.goal++;
                         break;
                     }
                     case 't': {
@@ -100,6 +105,7 @@ class Game {
                 this.game_state();
                 break;
             case "end":
+                print('end');
                 this.end_state();
                 break;
             default: break;
@@ -124,13 +130,12 @@ class Game {
 
         if (this.player.y >= height / 2 && this.player.y <= this.level_height - (height / 2)) {
             this.translate_y = -this.player.y + (height / 2);
-            this.camera_still = false;
         }
         else if (this.player.y > this.level_height - (height / 2)) {
             this.translate_y = -this.level_height + height;
-            this.camera_still = true;
         }
 
+        this.parallax.update();
         this.parallax.draw();
 
         push();
@@ -161,6 +166,7 @@ class Game {
             // pop();
         }
 
+
         //golem
         for (let i = 0; i < game.golems.length; i++) {
             let golem = game.golems[i];
@@ -190,6 +196,10 @@ class Game {
         // if (rat.x > 1750) {
         //     rat.move = 1;
         // }
+
+        if (this.goal <= 0) {
+            this.state = "end";
+        }
         this.animator.draw();
 
         this.player.update();
@@ -202,13 +212,13 @@ class Game {
     }
 
     end_state() {
-        this.end_state_timer += 0.2;
+        this.end_state_timer += 0.5;
 
-        if (true) {
+        if (this.player.health > 0) {
             background(100);
             fill(0, 255, 0, min(this.end_state_timer, 255));
             textSize(100);
-            text('You Win!', 270, 100);
+            text('You Win!', width/2, height / 10);
 
             image(sprites.player_angry, 270, 120, 400, 400);
 
@@ -218,10 +228,10 @@ class Game {
             background(100);
             fill(255, 0, 0, min(this.end_state_timer, 255));
             textSize(100);
-            text('You Died', 270, 100);
+            text('You Died', width/2, height / 10);
 
             fill(255, 0, 0, min(max(this.end_state_timer - 255, 0), 255));
-            text('Try Again?', 230, 600);
+            text('Try Again?', width / 2.1, height * .9);
 
             image(sprites.player_dead, 270, 120, 400, 400);
 
@@ -250,7 +260,7 @@ var mainmenu_tilemap = [
     "                                                          ",
     "                                                          ",
     "                                                          ",
-    "                            s                             ",
+    "               s                                          ",
     "  p                                                       ",
     "gggggggggggggttttgggggggggggggggggggggggggggggggggggggg   ",
 ];
