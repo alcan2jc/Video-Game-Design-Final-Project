@@ -17,6 +17,8 @@ class Game {
 
         this.snow = new Snow();
         this.blood = new Blood(300, 620, 120);
+        this.confeeti = new Confetti();
+
         this.HUD = new HUD();
         this.parallax = new Parallax();
         this.animator = new Animator();
@@ -24,7 +26,7 @@ class Game {
         this.mainMenu = new mainMenu();
         this.loadTilemap(mainmenu_tilemap);
         this.tutorial = new Tutorial();
-        this.state = "main menu";
+        this.state = "end";
 
         this.end_state_timer = 0;
     }
@@ -202,7 +204,17 @@ class Game {
     end_state() {
         this.end_state_timer += 0.2;
 
-        if (true) { // dead screen
+        if (true) {
+            background(100);
+            fill(0, 255, 0, min(this.end_state_timer, 255));
+            textSize(100);
+            text('You Win!', 270, 100);
+
+            image(sprites.player_angry, 270, 120, 400, 400);
+
+            this.confeeti.draw();
+
+        } else { // dead screen
             background(100);
             fill(255, 0, 0, min(this.end_state_timer, 255));
             textSize(100);

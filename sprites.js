@@ -14,6 +14,7 @@ class Sprites {
         }
 
         this.player_dead = loadImage('sprites/game_over.png');
+        this.player_angry = loadImage('sprites/player_angry.png');
 
         // slime sprites
         this.slime_idle = loadImage('sprites/slime_idle.png');
