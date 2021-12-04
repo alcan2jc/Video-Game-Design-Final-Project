@@ -26,7 +26,7 @@ class Game {
         this.mainMenu = new mainMenu();
         this.loadTilemap(mainmenu_tilemap);
         this.tutorial = new Tutorial();
-        this.state = "end";
+        this.state = "main menu";
 
         this.end_state_timer = 0;
     }
