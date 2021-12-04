@@ -346,6 +346,7 @@ class Player {
 
     // player wall jumps
     wall_jump() {
+        sounds.player_jump.play();
         this.jump();
         this.vel.x = this.jmp_spd_x * -this.x_dir;
     }
@@ -379,6 +380,7 @@ class Player {
 
         if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && !this.prev_key_pressed) {
             if (!this.touching_wall_x && (this.jumps > 0 && this.vel.y == 0)) {
+                sounds.player_jump.play();
                 this.jump();
             } else if (this.touching_wall_x) {
                 this.wall_jump();
@@ -401,6 +403,7 @@ class Player {
 
         if (mouseIsPressed) {
             if (mouseButton === LEFT && (frameCount - this.swordFrameCount) > 60 * this.swordCooldown) {
+                sounds.player_swing.play();
                 this.swordFrameCount = frameCount;
                 this.swinging = true;
             }

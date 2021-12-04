@@ -43,7 +43,7 @@ class Slime {
         this.jump_state_timer_max = 120;    // number of frames slime must wind up before jumping
         this.jump_state_timer_wait = 60;   // number of frames slime must wait after jumping
 
-        this.dead_timer_max = 90;   // how long the slime remains dead until it dissappears
+        this.dead_timer_max = 45;   // how long the slime remains dead until it dissappears
         this.dead_timer = 0;    // timer used when slime dies
     }
 
@@ -159,6 +159,13 @@ class Slime {
             }
         }
 
+        //Keep within bounds
+        if (this.x < 0) {
+            this.x = 0;
+        } else if (this.x > game.level_width - this.width) {
+            this.x = game.level_width - this.width;
+        }
+
         this.yvel += this.yacc;
 
         let newx = this.x + this.xvel;
@@ -170,7 +177,7 @@ class Slime {
 
             let d = abs(this.x - block.x) + abs(this.y - block.y);
 
-            if (d < 90) {
+            if (d < 200) {
 
                 if (
                     newx + this.width > block.x &&
@@ -192,7 +199,7 @@ class Slime {
 
             let d = abs(this.x - block.x) + abs(this.y - block.y);
 
-            if (d < 90) {
+            if (d < 200) {
                 if (
                     newx + this.width > block.x &&
                     newx < block.x + block.width &&
@@ -219,7 +226,7 @@ class Slime {
 
             let d = abs(this.x - block.x) + abs(this.y - block.y);
 
-            if (d < 90) {
+            if (d < 200) {
 
                 if (
                     newx + this.width > block.x &&
@@ -239,7 +246,7 @@ class Slime {
 
             let d = abs(this.x - block.x) + abs(this.y - block.y);
 
-            if (d < 90) {
+            if (d < 200) {
                 if (
                     newx + this.width > block.x &&
                     newx < block.x + block.width &&

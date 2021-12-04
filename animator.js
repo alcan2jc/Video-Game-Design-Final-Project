@@ -94,7 +94,7 @@ class Animator {
   class hit_a {
     constructor() {
       this.end = false;
-      this.alpha = 255;
+      this.alpha = 150;
     }
   
     draw() {

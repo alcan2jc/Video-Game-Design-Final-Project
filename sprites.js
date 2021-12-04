@@ -108,6 +108,9 @@ class Sprites {
 
         // shuriken
         this.shuriken = loadImage('sprites/Shuriken.png');
+
+        //win
+        this.win = loadImage('sprites/win.png');
     }
 
     // function for testing images

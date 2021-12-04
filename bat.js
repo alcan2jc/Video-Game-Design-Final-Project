@@ -207,10 +207,11 @@ class Bat {
             this.vel.x = this.xspd;
         }
 
+        //Keep within bounds
         if (this.x < this.width || this.x > game.level_width - this.width) {
             this.vel.x < 0 ? this.move = 2 : this.move = 1;
         }
-        
+
         //Attack if dist is less than the aggro range. 
         let d = abs(this.x - game.player.x) + abs(this.y - game.player.y);
         if (d < this.aggro_dist && this.move !== 4) {

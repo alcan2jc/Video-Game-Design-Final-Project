@@ -147,7 +147,7 @@ class Rat {
                 }
             }
         }
-        
+
         return [newx, newy]; //new = old for when there is collision
     }
 
@@ -237,6 +237,14 @@ class Rat {
             this.switchFrame = frameCount;
             this.move === 1 ? this.move = 2 : this.move = 1;
         }
+
+        //Keep within bounds
+        if (this.x < 0) {
+            this.x = 0;
+        } else if (this.x > game.level_width - this.width) {
+            this.x = game.level_width - this.width;
+        }
+        
         //Only check sword collision when player is swinging.
         if (game.player.swinging) {
             this.checkSwordCollision();

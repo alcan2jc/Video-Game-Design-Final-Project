@@ -351,6 +351,7 @@ class Golem {
 
         if (this.move === 4) {
             if ((frameCount - this.swordFrameCount) > 60 * this.swordCooldown) {
+                sounds.golem_swing.play();
                 this.swordFrameCount = frameCount;
                 this.swinging = true;
             }
